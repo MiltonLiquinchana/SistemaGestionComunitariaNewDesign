@@ -1,0 +1,161 @@
+*{
+    border: 0px;
+    margin: 0px;
+    padding: 0px;
+}
+header h1{
+    width: 100%;
+    text-align: center;
+    font-size: 40px;
+    color: white;
+}
+.form_cobro_actividades div img{
+    width: 4%;
+    height: 4%;
+}
+body{
+    margin: auto;
+    height: auto;
+    color: white;
+}
+
+/*div_contenedor opaco*/
+.div_contenedor{
+    background: black ;
+    opacity: 80%;
+    padding: 20px;
+    height: 100vh;
+}
+
+/*formulario*/
+.cont_forms{
+    width: 100%;
+    border: 1px black solid;
+    text-align: center;
+}
+.label_cont{
+    display: block;
+    width: 100%;
+    padding: 5px;
+    text-align: center;
+    font-size: 17px;
+    font-weight: bold;
+    
+}
+.cont_forms #label_contuno, #label_contdos{
+    display: inline-block;
+    width: 45%;
+}
+
+.seltect_item_registro_participacion, .input_date_registro_participacion{
+    width: 45%;
+    border-radius: 10px;
+    height: 5vh;
+    border: 1px black solid;
+    font-size: 17px;
+    font-weight: bold;
+    text-align: center;
+}
+
+/*Diseño tabla*/
+.contenedor_tabla_busqueda_socio{
+    height: 355px;
+    overflow: auto;
+    border: 2px white solid;
+}
+.tabla_busqueda_socio{
+    width: 128%;
+    border: 1px black solid;
+}
+.tabla_busqueda_socio thead{
+    font-size: 18px;
+    position: -webkit-sticky; /* Safari... depende del navegador */
+    position: sticky;
+    top: 0;/*para que con el sticky se mantenga siempre arriva en la posicion0*/
+}
+thead .fila_tabla_busqueda_socio .title_tabla_busqueda_socio{
+    background: rgb(11, 56, 180);
+}
+.tabla_busqueda_socio tbody{
+    font-size: 17px;
+    transition: .5s;/*transicion*/
+}
+.tabla_busqueda_socio thead, tbody{
+    display: block;
+}
+ .fila_tabla_busqueda_socio:nth-child(odd){
+    background: rgb(109, 103, 103);
+}
+.title_tabla_busqueda_socio, .cont_tabla_busqueda_socio{
+    text-align: center;
+}
+
+/*efecto hover*/
+.fila_tabla_busqueda_socio:hover{
+    background-color: rgb(44, 44, 231);
+    color: white;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+/*contenedor de los radio de asiste o no*/
+.fila_tabla_busqueda_socio #cont_radio_tabla_busqueda_socio_uno{
+    background-color: rgb(35, 199, 35);
+}
+.fila_tabla_busqueda_socio #cont_radio_tabla_busqueda_socio_dos{
+    background-color: rgb(250, 12, 12);
+}
+
+/*tamaños independientes de los contenedores de las tabla*/
+.cedula{
+    width: 200px;
+}
+.nomyapelli{
+    width: 420px;
+}
+.telefono{
+    width: 200px;
+}
+/*encabezado radio asistencias*/
+.asistencia{
+    width: 200px;
+}
+.radio_tabla_busqueda_socio{
+    width: 100px;
+}
+
+/*para mantener el nombre y apellidos estaticos al moverse horizontalmente*/
+.title_tabla_busqueda_socio_estatic_lateral{
+    position: -webkit-sticky; /* Safari... depende del navegador */
+    position: sticky;
+    left: 0;
+}/*Esta sin usar*/
+/*/diseño tabla*/
+
+/*area botones*/
+.botones{ 
+    width: 100%;
+    margin: auto;
+    padding: 10px;
+    text-align: center;
+}
+/*diseño botones*/
+.btn_form_busqueda_socio{
+    font-weight: bold;
+    border-radius: 12px;
+    cursor: pointer;
+    display: inline-block;  
+    text-align: center;
+    width: 20%;
+    height: 5vh;
+    font-size: 16px;
+    background: linear-gradient(rgb(59, 59, 238), rgb(191, 191, 231), rgb(24, 24, 206));
+    transition: all 0.2s ease 0s;
+}
+.btn_form_busqueda_socio:hover{
+    color: white;
+    width: 21%;
+    height: 6vh;
+    background: linear-gradient( rgb(191, 191, 231),rgb(59, 59, 238), rgb(24, 24, 206));
+    box-shadow: 0 0 30px white;
+}

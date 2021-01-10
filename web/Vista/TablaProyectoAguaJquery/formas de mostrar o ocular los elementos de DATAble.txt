@@ -1,0 +1,18 @@
+se puede mostrar de la siguiente forma 
+dom: 'Bfrtilp',
+o se puede ocultar los elementos de la siguiente forma
+"paging": false,
+        "info": false,
+        todo incluido
+        $(document).ready(function () {
+    /*agregamos nuestra tabla(el id de la tabla) a una variable */
+    var table = $('#example').DataTable({
+        "paging": false,
+        "info": false,
+        "language": languageSpanish,
+        "scrollY": 200,
+        "scrollX": true,
+        responsive: "true",
+        dom: 'Bfrtilp',
+        buttons: btnsstyleepi
+    });

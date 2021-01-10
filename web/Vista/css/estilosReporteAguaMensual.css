@@ -1,0 +1,184 @@
+*{
+    border: 0px;
+    margin: 0px;
+    padding: 0px;
+}
+header h1{
+    width: 100%;
+    text-align: center;
+    font-size: 40px;
+    color: white;
+}
+.form_cobro_actividades div img{
+    width: 4%;
+    height: 4%;
+}
+body{
+    margin: auto;
+    height: auto;
+    color: white;   
+}
+/*div_contenedor opaco*/
+.div_contenedor{
+    background: black ;
+    opacity: 80%;
+    padding: 20px;
+    height: 100vh;
+}
+
+
+/*formulario*/
+/*seleccion tipo de reporte*/
+.cont_forms{
+    width: 100%;
+    border: 1px black solid;
+    text-align: center;
+
+}
+.label_cont{
+    display: inline-block;
+    width: 48%;
+    padding: 5px;
+    text-align: center;
+    font-size: 17px;
+    font-weight: bold;
+
+}
+
+.seltect_item_registro_participacion{
+    width: 38%;
+    border-radius: 10px;
+    height: 5vh;
+    border: 1px black solid;
+    background: linear-gradient(rgb(59, 59, 238), rgb(191, 191, 231), rgb(24, 24, 206));
+    font-size: 17px;
+    font-weight: bold;
+    text-align: center;
+}
+.busqueda{
+    background: white;
+    width: 50%;
+}
+/*/seleccion tipo reporte*/
+
+/*div busqueda y seleccion opciones*/
+body div .label_busqueda{
+    display: inline-block;
+    width: 100%;
+    border: 1px black solid;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 17px;
+    font-weight: bold;
+}
+body div .label_busqueda img{
+    margin-left: 20px;
+}
+body div .label_busqueda .input_cednom_socio{
+    border-radius: 12px;
+    width: 37%;
+    border:black solid 2px;   
+    font-size: 17px;
+    font-weight: bold;
+    padding: 5px;
+
+}
+.label_inputcheck{
+    margin-left: 30%;
+    font-size: 17px;
+    font-weight: bold;
+}
+#inputdos_check_busqueda{
+    margin-left: 1%;
+}
+
+.label_inputcheck, .inputcheck_busqueda_socio{
+    display: inline-block;
+
+}
+/*/div busqueda y seleccion opciones*/
+
+/*Diseño tabla*/
+.contenedor_tabla_busqueda_socio{
+    height: 355px;
+    overflow: auto;
+    border: 2px white solid;
+}
+.tabla_busqueda_socio{
+    width: 245%;
+    border: 1px black solid;
+}
+.tabla_busqueda_socio thead{
+    font-size: 18px;
+    position: -webkit-sticky; /* Safari... depende del navegador */
+    position: sticky;
+    top: 0;/*para que con el sticky se mantenga siempre arriva en la posicion0*/
+}
+thead .fila_tabla_busqueda_socio .title_tabla_busqueda_socio{
+    background: rgb(11, 56, 180);
+}
+.tabla_busqueda_socio tbody{
+    font-size: 17px;
+    transition: .5s;/*transicion*/
+}
+.tabla_busqueda_socio thead, tbody{
+    display: block;
+}
+ .fila_tabla_busqueda_socio:nth-child(odd){
+    background: rgb(109, 103, 103);
+}
+.title_tabla_busqueda_socio, .cont_tabla_busqueda_socio{
+    text-align: center;
+    width: 325px;
+}
+/*efecto hover*/
+.fila_tabla_busqueda_socio:hover{
+    background-color: rgb(44, 44, 231);
+    color: white;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.cedula{
+    width: 200px;
+}
+.nomyapelli{
+    width: 425px;
+}
+.nummedidor{
+    width: 300px;
+}
+.ttconsumo, .ttpagado, .ttsaldopendiente{
+    width: 250px;
+}
+
+
+/*/diseño tabla*/
+
+/*area botones*/
+.botones{ 
+    width: 100%;
+    margin: auto;
+    padding: 10px;
+    text-align: center;
+}
+/*diseño botones*/
+.btn_form_reportes{
+    font-weight: bold;
+    border-radius: 12px;
+    cursor: pointer;
+    display: inline-block;  
+    text-align: center;
+    width: 20%;
+    height: 5vh;
+    font-size: 16px;
+    background: linear-gradient(rgb(59, 59, 238), rgb(191, 191, 231), rgb(24, 24, 206));
+    transition: all 0.2s ease 0s;
+}
+.btn_form_reportes:hover{
+    color: white;
+    width: 21%;
+    height: 6vh;
+    background: linear-gradient( rgb(191, 191, 231),rgb(59, 59, 238), rgb(24, 24, 206));
+    box-shadow: 0 0 30px white;
+}

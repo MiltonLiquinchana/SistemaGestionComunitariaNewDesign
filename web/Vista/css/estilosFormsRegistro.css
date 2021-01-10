@@ -1,0 +1,12 @@
+#contenedor_Formregistro{
+    padding-bottom: 120px;
+}
+
+#contenidoFormregistro{
+    width: 100%;
+    display: inline-block;
+    margin-left: 30%;
+}
+#btns_Fromregistro{
+    text-align: center;
+}

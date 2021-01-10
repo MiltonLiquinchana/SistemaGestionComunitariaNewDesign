@@ -1,0 +1,101 @@
+/*para el responsive, le decimos que cuando la resolucion baje a 320px*/
+*{
+    border: 0px;
+    margin: 0px;
+    padding: 0px;
+}
+header h1{
+    width: 100%;
+    text-align: center;
+    font-size: 40px;
+    color: white;
+    font-weight: bold;
+}
+body{ 
+    margin: auto;
+    width: 100%;
+    color: white;   
+    background-image: url(/imagenes/fondo_login.jpg); 
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+/*div_contenedor opaco*/
+.div_contenedor{
+    background: black ;
+    opacity: 80%;
+    padding: 20px;
+}
+
+/*diseño de los campos del formulario*/
+.cont_contenedores{
+    width: 95%;
+    border: 1px black solid ;
+    border-radius: 15px;
+    padding: 15px;
+    margin: auto;
+}
+.cont_forms{
+    width: 70%;
+    margin: auto;
+
+}
+/*contenedor grande*/
+.cont_campos_form_registro{
+    height: 30px;
+    text-align: center;
+    font-size: 17px;
+    font-weight: bold;
+    border: 2px black solid;
+    padding-bottom: 5px;
+    margin-bottom: 40px;
+    border-radius: 15px;
+}
+.label_campos_form_registro_socios{
+    float: left;/*para que el texto se mueva a la izquierda*/
+    padding-left: 40px;
+    
+}
+/*campo de ingreso*/
+.campo_form_registro_socios{
+    width: 90%;
+    height: 25px;
+    border-radius: 15px;
+    padding: 5px;
+    border: 2px black solid;
+    font-size: 17px;
+    font-weight: bold;
+}
+
+/*/disño de los campos del formulario*/
+
+
+/*area botones*/
+.botones{ 
+    width: 100%;
+    margin: auto;
+    padding: 10px;
+    text-align: center;
+}
+/*diseño botones*/
+.btn_form_reg_socio{
+    font-weight: bold;
+    border-radius: 12px;
+    cursor: pointer;
+    display: inline-block;  
+    text-align: center;
+    width: 15%;
+    height: 5vh;
+    font-size: 16px;
+    background: linear-gradient(rgb(59, 59, 238), rgb(191, 191, 231), rgb(24, 24, 206));
+    transition: all 0.2s ease 0s;
+}
+.btn_form_reg_socio:hover{
+    *background: linear-gradient( rgb(92, 92, 92),rgb(151, 32, 32),rgb(250, 168, 168));
+    color: white;
+    width: 16%;
+    height: 6vh;
+    background: linear-gradient( rgb(191, 191, 231),rgb(59, 59, 238), rgb(24, 24, 206));
+    box-shadow: 0 0 30px white;
+}
+

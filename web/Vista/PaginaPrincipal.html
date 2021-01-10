@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="css/bootstrap.css" crossorigin="anonymous">
+        <link rel="stylesheet" href="TablaProyectoAguaJquery/DataTables/datatables.min.css">
+        <!--datatables css style avansado-->
+        <link rel="stylesheet"
+              href="TablaProyectoAguaJquery/DataTables/DataTables-1.10.21/css/dataTables.bootstrap4.min.css">
+        <!--alertify stilos-->
+        <link rel="stylesheet" href="css/estiloMenu.css">
+        <link rel="stylesheet" href="css/estilosTabla.css">
+        <link rel="stylesheet" href="css/estilosFormsRegistro.css">
+    </head>
+
+    <body>
+        <div id="sidebar">
+            <div class="togle-btn" id="togleBTN">
+                <span>&#9776;</span>
+            </div>
+            <div class="contenedormenu" id="contenedormenu">
+                <ul class="nav flex-column">
+                    <!-- Image and text -->
+                    <li class="nav-item user">
+                        <img src="icon-menu/usuario.svg" width="50" height="50" class="d-inline-block align-top"
+                             alt="Logo Usuario">
+                        <div>
+                            <h5>User Name</h5>
+                            <h5>Bootstrap</h5>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><img src="icon-menu/house.png" width="40" height="40"
+                                                          class="d-inline-block align-top" alt="Logo inicio"> Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><img src="icon-menu/love.png" width="40" height="40"
+                                                          class="d-inline-block align-top" alt="Logo socios"> Socios</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                           aria-haspopup="true" aria-expanded="false"><img src="icon-menu/030-presentation.png" width="40"
+                                                                        height="40" class="d-inline-block align-top" alt="Logo reportes"> Reportes</a>
+                        <div class="sub-menu" id="subuno" style="display: none;">
+                            <a class="dropdown-item" href="#"> Reporte Consumos</a>
+                            <a class="dropdown-item" href="#"> Reporte Actividades</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                           aria-haspopup="true" aria-expanded="false"><img src="icon-menu/019-writing-1.png" width="40"
+                                                                        height="40" class="d-inline-block align-top" alt="Logo registro"> Registro</a>
+                        <div class="sub-menu" id="subdos" style="display: none;">
+                            <a class="dropdown-item" href="#"> Registrar Socio</a>
+                            <a class="dropdown-item" href="#">Registrar Consumo</a>
+                            <a class="dropdown-item" href="#"> Registrar Actividades</a>
+                            <a class="dropdown-item" href="#"> Registrar Medidores</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                           aria-haspopup="true" aria-expanded="false"><img src="icon-menu/pagos.png" width="40" height="40"
+                                                                        class="d-inline-block align-top" alt="Logo pagos"> Pagos</a>
+                        <div class="sub-menu" id="subtres" style="display: none;">
+                            <a class="dropdown-item" href="#"> Pagos de Agua</a>
+                            <a class="dropdown-item" href="#"> Pago de Cuotas</a>
+                            <a class="dropdown-item" href="#"> Pago de Multas</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                           aria-haspopup="true" aria-expanded="false"><img src="icon-menu/006-content.png" width="40"
+                                                                        height="40" class="d-inline-block align-top" alt="Logo configuracion"> Configuración</a>
+                        <div class="sub-menu" id="subcuatro" style="display: none;">
+                            <a class="dropdown-item" href="#"> Configurar Descuentos</a>
+                            <a class="dropdown-item" href="#"> Configurar Directiva</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><img src="icon-menu/love.png" width="40" height="40"
+                                                          class="d-inline-block align-top" alt="Logo contacto"> Contacto</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><img src="icon-menu/029-power-off.png" width="40" height="40"
+                                                          class="d-inline-block align-top" alt="Logo sesion"> Cerrar Sesión</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="contenedorpaginas" id="contenedorpaginas">
+                <header>
+                    <h1 class="text-center text-light"></h1>
+                    <h2 class="text-center text-light"> Como <span class="badge badge-warning">Personalizar</span> </h2>
+                </header>
+                <div class="divicion" style="height: 58px;"></div>
+                <div id="contenido">
+
+                </div>
+            </div>
+        </div>
+        <div id="modales">
+
+        </div>
+        <script src="js/jquery.js"></script>
+        <!--poopers-->
+        <script src="js/popper.min.js"></script>
+        <!--boostrap-->
+        <script src="js/bootstrap.js"></script>
+        <!--datatables script-->
+        <script src="TablaProyectoAguaJquery/DataTables/datatables.js"></script>
+        <!--para usar botones en datatables Js-->
+        <script src="TablaProyectoAguaJquery/DataTables/Buttons-1.6.2/js/dataTables.buttons.js"></script>
+        <script src="TablaProyectoAguaJquery/DataTables/JSZip-2.5.0/jszip.js"></script>
+        <script src="TablaProyectoAguaJquery/DataTables/pdfmake-0.1.36/pdfmake.js"></script>
+        <script src="TablaProyectoAguaJquery/DataTables/pdfmake-0.1.36/vfs_fonts.js"></script>
+        <script src="TablaProyectoAguaJquery/DataTables/Buttons-1.6.2/js/buttons.html5.js"></script>
+        <script src="js/sweetalert.min.js"></script>
+        <script src="js/javascript_menu.js"></script>
+        <script src="js/JSTabla.js"></script>
+        <script src="js/JSFormRConsumos.js"></script>
+    </body>
+
+</html>

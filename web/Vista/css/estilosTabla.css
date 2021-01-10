@@ -1,0 +1,125 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+table {
+    width: 100%;
+}
+
+.containeer {
+    width: 100%;
+    height: 450px;
+    border: 1px white solid;
+}
+
+thead tr th {
+    position: sticky!important;
+    top: 0!important;
+    z-index: 10!important;
+}
+
+/*estilo para el campo de busqueda o filtro*/
+
+.dataTables_filter {
+    width: 300px;
+    float: left;
+    color: white;
+}
+
+/*estilos de los botones para descargar en documento*/
+
+.btn-group {
+    width: 200px;
+    float: right;
+}
+
+/*cambiamos de color al texto de la tabla*/
+
+tbody tr {
+    color: white;
+}
+
+/*el color de la cabecera que sea azul*/
+
+.thead_dark tr th {
+    background-color: rgb(11, 56, 180);
+    color: white;
+}
+
+tbody tr td #editar:hover {
+    box-shadow: 0 0 40px rgb(251, 255, 0);
+}
+
+tbody tr td #eliminar:hover {
+    box-shadow: 0 0 40px rgb(255, 67, 67);
+}
+
+/*para que al pasar por ensima de una fila nos aga un efecto neon*/
+
+tbody tr:hover {
+    box-shadow: 0 0 40px rgb(247, 247, 247);
+}
+
+/*cambio de color al pasar por alguna celda*/
+
+tbody tr:hover td {
+    background-color: blue;
+}
+
+/*efecto de cambio de color de las filas de la tabla*/
+
+tbody tr:nth-child(odd) {
+    background: rgb(109, 103, 103) !important;
+}
+
+/*estilos para los modales de boostrap*/
+#staticBackdrop{
+    background-color: rgba(  0, 2, 26, 0.50);
+}
+
+/*estilos para los modales del sweet alert*/
+
+.swal-overlay {
+    background-color: rgba(  0, 2, 26, 0.50);
+}
+
+.swal-button--confirm {
+    background-color: #00B74A;
+}
+
+.swal-button--confirm:not([disabled]):hover {
+    background-color: #218838;
+}
+
+.swal-button--danger {
+    background-color: #F93154;
+}
+
+.swal-button--danger:not([disabled]):hover {
+    background-color: #df4740;
+}
+
+@media screen and (max-width: 639px) {
+    .divicion {
+        height: 0px !important;
+    }
+    /*hacemo al boton redondo y que se quede sobre todo el contenido*/
+    .btnagregar {
+        display: scroll;
+        position: fixed;
+        width: 50px;
+        height: 50px;
+        border-radius: 50px;
+        bottom: 320px;
+        right: 0px;
+        font-size: 0%;
+    }
+    svg {
+        font-size: 20px;
+    }
+}
+
+/*.btn-group, .btn-group-vertical{
+    position: relative! important;
+}*/
