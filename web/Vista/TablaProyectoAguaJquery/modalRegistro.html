@@ -13,79 +13,78 @@
                 <form id="frmRESocios">
                     <div class="form-group">
                         <label for="exampleInputEmail1">Cedula:</label>
-                        <input class="form-control form-control-sm" type="text" placeholder="Ingrese la cedula" required>
+                        <input class="form-control form-control-sm" type="text" placeholder="Ingrese la cedula" required name="cedula">
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail1">Primer nombre:</label>
-                        <input class="form-control form-control-sm" type="text" placeholder="Ingrese el primer nombre" required>
+                        <input class="form-control form-control-sm" type="text" placeholder="Ingrese el primer nombre" required name="pNombre">
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail1">Segudo nombre:</label>
-                        <input class="form-control form-control-sm" type="text" placeholder="Ingrese el segundo nombre" required>
+                        <input class="form-control form-control-sm" type="text" placeholder="Ingrese el segundo nombre" required name="sNombre">
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail1">Primer apellido:</label>
                         <input class="form-control form-control-sm" type="text"
-                               placeholder="Ingrese el primer apellido" required>
+                               placeholder="Ingrese el primer apellido" required name="pApellido">
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail1">Segundo apellido:</label>
                         <input class="form-control form-control-sm" type="text"
-                               placeholder="Ingrese el segundo apellido" required>
+                               placeholder="Ingrese el segundo apellido" required name="sApellido">
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail1">Numero de telefono:</label>
                         <input class="form-control form-control-sm" type="text"
-                               placeholder="Ingrese el numero de telefono" required>
+                               placeholder="Ingrese el numero de telefono" required name="nTelefono">
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail1">Direccion:</label>
                         <input class="form-control form-control-sm" type="text"
-                               placeholder="Ingrese la direccion del domicilio" required>
+                               placeholder="Ingrese la direccion del domicilio" required name="direccion">
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail1">Referencia Geografica</label>
                         <input class="form-control form-control-sm" type="text"
-                               placeholder="Descripcion de como llegar al domicilio, color de casa, etc" required>
+                               placeholder="Descripcion de como llegar al domicilio, color de casa, etc" required name="refGeografica">
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail1">Comunidad:</label>
                         <input class="form-control form-control-sm" type="text" placeholder="Comunidad donde recide"
-                               readonly>
+                               readonly name="comunidad">
                     </div>
                     <div class="form-row">
                         <div class="col-md-6 mb-3">
                             <label for="validationDefault01">Fecha de nacimiento:</label>
-                            <input type="date" class="form-control form-control-sm" required>
+                            <input type="date" class="form-control form-control-sm" required name="fechNacimiento">
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="exampleInputEmail1">Edad:</label>
+                            <label for="exampleInputText">Edad:</label>
                             <input type="text" class="form-control form-control-sm" placeholder="Ingrese la edad"
-                                   required>
+                                   required name="edad">
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col-md-6 mb-3">
                             <label for="exampleInputEmail1">Nombre de Usuario:</label>
                             <input type="text" class="form-control form-control-sm"
-                                   placeholder="Ingrese un nombre de usuario" autocomplete="new-password">
+                                   placeholder="Ingrese un nombre de usuario" autocomplete="off" required name="nUsuario">
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col-md-6 mb-3">
                             <label for="exampleInputEmail1">Contraseña:</label>
-                            <input type="password" class="form-control form-control-sm" placeholder="Ingrese una contraseña" autocomplete="new-password">
+                            <input type="password" class="form-control form-control-sm" placeholder="Ingrese una contraseña" autocomplete="new-password" required name="contrasenia">
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col-md-6 mb-3">
                             <label for="validationDefault04">Tipo de usuario:</label>
-                            <select class="custom-select" id="validationDefault04" required>                             
+                            <select class="custom-select" id="validationDefault04" required name="tipoUsuario">                             
                             </select>
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary">Guardar</button>
-                    <button type="button" id="btn_guardarSoc">guardardo</button>
                 </form>
             </div>
             <div class="modal-footer">

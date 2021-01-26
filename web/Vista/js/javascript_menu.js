@@ -7,15 +7,23 @@ var submencuatro = document.getElementById("subcuatro");
 var ref_a = document.querySelectorAll('a');//obtenemos todos los elementos a del formulario(solo los del menu)
 window.addEventListener("load", inicio);//al terminar de cargar la pagina(La pagina principal)
 function inicio() {
-    ref_a[1].addEventListener("click", mostrartabla);/*le asignamos un evento al boton y lo que tiene que hacer */
-    ref_a[2].addEventListener("click", desplegaruno);
-    ref_a[5].addEventListener("click", desplegardos);
-    ref_a[7].addEventListener("click", mostrarFormRconsumo);
-    ref_a[10].addEventListener("click", desplegartres);
-    ref_a[11].addEventListener("click", mostrarFormRPA);
-    ref_a[14].addEventListener("click", desplegarcuatro);
-    ref_a[18].addEventListener("click", cerrarSesion);
-
+    fetch('../Controles').then(res => res.json())
+            .then(data =>
+            {
+                if (data.error === 'error') {
+                    window.location.href = "../index.html";
+                } else if (data.usuario.length > 0) {
+                    ref_a[1].addEventListener("click", mostrartabla);/*le asignamos un evento al boton y lo que tiene que hacer */
+                    ref_a[2].addEventListener("click", desplegaruno);
+                    ref_a[5].addEventListener("click", desplegardos);
+                    ref_a[7].addEventListener("click", mostrarFormRconsumo);
+                    ref_a[10].addEventListener("click", desplegartres);
+                    ref_a[11].addEventListener("click", mostrarFormRPA);
+                    ref_a[14].addEventListener("click", desplegarcuatro);
+                    ref_a[18].addEventListener("click", cerrarSesion);
+                }
+            }
+            );
 }
 ;
 /*Esta funcion carga la tabla */
@@ -23,7 +31,8 @@ function mostrartabla() {
     /*cargamos la tabla a la pagina principal */
     $('#contenido').load("TablaProyectoAguaJquery/tabla.html", llenarDatatable);/* con esto le decimos que al hacer click nos
      carge la tabla al formularo*/
-    //en esta funcion tambien se asigna un evento llamado cargarDatatable el cuel se encuentra en otro archivo js, esto para hacerle mas dinamico
+    //en esta funcion tambien se asigna un evento llamado cargarDatatable el cuel se encuentra en otro archivo js, esto para hacerle mas dinamico 
+    
 }
 ;
 function mostrarFormRconsumo() {
@@ -31,18 +40,21 @@ function mostrarFormRconsumo() {
 }
 ;
 function mostrarFormRPA() {
-    $('#contenido').load("TablaProyectoAguaJquery/registroPagoAgua.html");
+    $('#contenido').load("TablaProyectoAguaJquery/registroPagoAgua.html",inicioJsFormPConsumos);
 }
 ;
 
 function cerrarSesion(e) {
     e.preventDefault();
-    fetch('../Controles?accion=CerrarSesion', {
-        method: 'POST'
+    var datos = new FormData();
+    datos.append("accion", "CerrarSesion");
+    fetch('../Controles', {
+        method: 'POST',
+        body: datos
     }).then(res => res.json())
             .then(data => {
                 if (data.estateLogin === "LogOut") {
-                    window.location.href="../index.html";
+                    window.location.href = "../index.html";
                 }
             });
 }

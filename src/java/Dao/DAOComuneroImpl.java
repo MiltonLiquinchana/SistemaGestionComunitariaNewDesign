@@ -8,85 +8,51 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DAOComuneroImpl {
+
     private Connection conec;
-    Comunero comunero;   
+    Comunero comunero;
 
-    /*public void registrar(Comunero comunero) throws Exception {
-
+    public boolean registrarEditarEliminar(String accion, int pk_comuner, String cedula, String primer_nombre, String segundo_nombre, String primer_apellido, String segundo_Apellido, String telefono, String fecha_nacimiento, int edad, int fk_comuna, String direccion_vivienda, String referencia_geografica, String usuario, String Contrasenia, int fk_tipousuario) throws SQLException {
+        CallableStatement ps = null;
+        boolean registrocomunero = true;
         try {
-            conec = con.getConectionn();
+            conec = Conexion.getInstace().getConnection();
             //ya echa la conecion hacemos una consulta
             //declaramos variables que necesitamos para hacer transacciones entre mysql
-            CallableStatement ps; //para usar esra se agrego la libreria
+            //para usar esra se agrego la libreria
             //tambien agregamos libreria
             //aqui mandamos la consulta sql
-            ps = conec.prepareCall("{call guardar_comunero(?,?,?,?,?,?,?,?,?,?,?)}");
-            ps.setString(1, comunero.getCedula());
-            ps.setString(2, comunero.getPrimer_nombre());
-            ps.setString(3, comunero.getSegundo_nombre());
-            ps.setString(4, comunero.getPrimer_apellido());
-            ps.setString(5, comunero.getSegundo_apellido());
-            ps.setString(6, comunero.getTelefono());
-            ps.setString(7, comunero.getFecha_nacimiento());
-            ps.setInt(8, comunero.getEdad());
-            ps.setInt(9, comunero.getFk_comuna());
-            ps.setString(10, comunero.getDireccion_vivienda());
-            ps.setString(11, comunero.getReferencia_geografica());
-            ps.execute();
-            JOptionPane.showMessageDialog(null, "Se guardo exitosamente");
-        } catch (Exception e) {
+            ps = conec.prepareCall("{call GuardarActualizarEliminar(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+            ps.setString(1, accion);
+            ps.setInt(2, pk_comuner);
+            ps.setString(3, cedula);
+            ps.setString(4, primer_nombre);
+            ps.setString(5, segundo_nombre);
+            ps.setString(6, primer_apellido);
+            ps.setString(7, segundo_Apellido);
+            ps.setString(8, telefono);
+            ps.setString(9, fecha_nacimiento);
+            ps.setInt(10, edad);
+            ps.setInt(11, fk_comuna);
+            ps.setString(12, direccion_vivienda);
+            ps.setString(13, referencia_geografica);
+            ps.setString(14, usuario);
+            ps.setString(15, Contrasenia);
+            ps.setInt(16, fk_tipousuario);
+            registrocomunero = ps.execute();
+            System.out.println(ps);
+            ps.close();
+            Conexion.getInstace().closeConnection(conec);
+        } catch (SQLException e) {
             //solo un mensaje en consola
-            JOptionPane.showMessageDialog(null, e);
+            System.out.println("No se a podido guardar los datos " + e.getMessage());
+            ps.close();
+            Conexion.getInstace().closeConnection(conec);
+            registrocomunero = true;
         }
-
+        return registrocomunero;
     }
 
-    public void modificar(Comunero comunero) throws SQLException {
-        try {
-            conec = con.getConectionn();
-            //ya echa la conecion hacemos una consulta
-            //declaramos variables que necesitamos para hacer transacciones entre mysql
-            CallableStatement ps; //para usar esra se agrego la libreria
-            //tambien agregamos libreria
-            //aqui mandamos la consulta sql
-            ps = conec.prepareCall("{call actualizar_comunero(?,?,?,?,?,?,?,?,?,?,?,?)}");
-            ps.setInt(1, comunero.getPk_comunero());
-            ps.setString(2, comunero.getCedula());
-            ps.setString(3, comunero.getPrimer_nombre());
-            ps.setString(4, comunero.getSegundo_nombre());
-            ps.setString(5, comunero.getPrimer_apellido());
-            ps.setString(5, comunero.getSegundo_apellido());
-            ps.setString(7, comunero.getTelefono());
-            ps.setString(8, comunero.getFecha_nacimiento());
-            ps.setInt(9, comunero.getEdad());
-            ps.setInt(10, comunero.getFk_comuna());
-            ps.setString(11, comunero.getDireccion_vivienda());
-            ps.setString(12, comunero.getReferencia_geografica());
-            ps.execute();
-            JOptionPane.showMessageDialog(null, "Acutalizacion excitosa");
-        } catch (Exception e) {
-            //solo un mensaje en consola
-            JOptionPane.showMessageDialog(null, e);
-        }
-    }*/
-
- /*public void eliminar(Comunero comunero) throws Exception {
-        try {
-            conec = con.getConectionn();
-            //ya echa la conecion hacemos una consulta
-            //declaramos variables que necesitamos para hacer transacciones entre mysql
-            CallableStatement ps; //para usar esra se agrego la libreria
-            //tambien agregamos libreria
-            //aqui mandamos la consulta sql
-            ps = conec.prepareCall("{call eliminar_comunero(?)}");
-            ps.setInt(1, comunero.getPk_comunero());
-            ps.execute();
-            JOptionPane.showMessageDialog(null, "Se elimino comunero exitosamente");
-        } catch (Exception e) {
-            //solo un mensaje en consola
-            JOptionPane.showMessageDialog(null, e);
-        }
-    }*/
     public List listar(int id_comuna) throws SQLException {
         List<Comunero> lista = new ArrayList();
         CallableStatement ps = null; //para usar esra se agrego la libreria
@@ -126,64 +92,25 @@ public class DAOComuneroImpl {
         return lista;
     }
 
-    
 
-    /* public Comunero listarID(Comunero comunero) throws Exception {
+    /*metodo para listar los datos del comunero por el numero de cedula o nombres completos*/
+    public Comunero consultaComuneroCedula(String dato) throws SQLException {
+        
+        CallableStatement ps = null; //para usar esra se agrego la libreria
         try {
-            conec = con.getConectionn();
+            conec = Conexion.getInstace().getConnection();
             //ya echa la conecion hacemos una consulta
-            //declaramos variables que necesitamos para hacer transacciones entre mysql
-            CallableStatement ps; //para usar esra se agrego la libreria
+            //declaramos variables que necesitamos para hacer transacciones entre mysql       
             ResultSet res; //tambien agregamos libreria
             //aqui mandamos la consulta sql
-            ps = conec.prepareCall("{call consulta_comuneroID(?)}");
-            ps.setInt(1, comunero.getPk_comunero());
-            res = ps.executeQuery();
-            //con esto ejecutamos la consulta
-            //con un if evaluamos si la consulta tiene resultados
-            //con if solo estamos dando por echo que la consulta va a devolver una sola linea
-            while (res.next()) { // si esto sale verdadero significa que esta consulta tiene resultados
-                //con sun joptionpanel imprimimos los resultados
-                //aqui definimos el tipo de dato que vamos a traer de la bd y dentro la etiqueta de la columna
-                comunero.setPk_comunero(res.getInt("pk_comunero"));
-                comunero.setCedula(res.getString("cedula"));
-                comunero.setPrimer_nombre(res.getString("primer_nombre"));
-                comunero.setSegundo_nombre(res.getString("segundo_nombre"));
-                comunero.setPrimer_apellido(res.getString("primer_apellido"));
-                comunero.setSegundo_apellido(res.getString("segundo_apellido"));
-                comunero.setTelefono(res.getString("telefono"));
-                comunero.setFecha_nacimiento(String.valueOf(res.getDate("fecha_nacimiento")));
-                comunero.setEdad(res.getInt("edad"));
-                comunero.setFk_comuna(res.getInt("fk_comuna"));
-                comunero.setDireccion_vivienda(res.getString("direccion_vivienda"));
-                comunero.setReferencia_geografica(res.getString("referencia_geografica"));
-            }
-            res.close();
-        } catch (Exception e) {
-            //solo un mensaje en consola
-            JOptionPane.showMessageDialog(null, e);
-        }
-        return comunero;
-    }*/
-
- /*metodo para listar los datos del comunero por el numero de cedula*/
- /* public Comunero listarCCedula(String dato) throws Exception {
-        Comunero comunero = new Comunero();
-        try {
-            conec = con.getConectionn();
-            //ya echa la conecion hacemos una consulta
-            //declaramos variables que necesitamos para hacer transacciones entre mysql
-            CallableStatement ps; //para usar esra se agrego la libreria
-            ResultSet res; //tambien agregamos libreria
-            //aqui mandamos la consulta sql
-            ps = conec.prepareCall("{call listar_datos_comunero_ced_nom(?)}");
+            ps = conec.prepareCall("{call consultaDatosComunero(?)}");
             ps.setString(1, dato);
             res = ps.executeQuery();
             //con esto ejecutamos la consulta
             //con un if evaluamos si la consulta tiene resultados
             //con if solo estamos dando por echo que la consulta va a devolver una sola linea
-            while (res.next()) { // si esto sale verdadero significa que esta consulta tiene resultados
-                //con sun joptionpanel imprimimos los resultados
+            if (res.next()) { // si esto sale verdadero significa que esta consulta tiene resultados
+                comunero = new Comunero();
                 //aqui definimos el tipo de dato que vamos a traer de la bd y dentro la etiqueta de la columna
                 comunero.setPk_comunero(res.getInt("pk_comunero"));
                 comunero.setCedula(res.getString("cedula"));
@@ -191,13 +118,15 @@ public class DAOComuneroImpl {
                 comunero.setSegundo_nombre(res.getString("segundo_nombre"));
                 comunero.setPrimer_apellido(res.getString("primer_apellido"));
                 comunero.setSegundo_apellido(res.getString("segundo_apellido"));
-
             }
-            res.close();
-        } catch (Exception e) {
+            ps.close();
+            Conexion.getInstace().closeConnection(conec);
+        } catch (SQLException e) {
             //solo un mensaje en consola
-            JOptionPane.showMessageDialog(null, e);
+            System.out.println("No se a podido realizar la consulta " + e.getMessage());
+            ps.close();
+            Conexion.getInstace().closeConnection(conec);
         }
         return comunero;
-    }*/
+    }
 }

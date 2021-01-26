@@ -48,12 +48,16 @@ var btnsstyleepi = [
         className: 'btn btn-info'
     }
 ];
-var id_comunero;
 var json_comunero;
+var datos;
+var accion;//esta variable nos sirve para asignar una accion de guardar o actualizar o eliminar
+var id_comunero;
 function llenarDatatable() {
-
-    fetch('../Controles?accion=cargarSocios', {
-        method: 'POST'
+    datos = new FormData();
+    datos.append("accion", "cargarSocios");
+    fetch('../Controles', {
+        method: 'POST',
+        body: datos
     }).then(res => res.json())
             .then(data => {
                 //ejecutamos la funcion para cargar el jquery datatable para que se aplique esta funcionalidad    
@@ -61,7 +65,14 @@ function llenarDatatable() {
                 cuerportable.innerHTML = '';
                 for (let item of data) {
                     if (item.error === "error") {
-                        console.log("verifique el dato enviado");
+                        swal("¡Registros no encontrados!", "Registre un nuevo usuario", {
+                            icon: "info",
+                            dangerMode: true,
+                            timer: 5000,
+                            button: {
+                                text: "Cerrar"
+                            }
+                        });
                         break;
                     }
                     cuerportable.innerHTML += `<tr>
@@ -96,6 +107,7 @@ function llenarDatatable() {
 function cargarDatatable() {
     /*agregamos nuestra tabla(el id de la tabla) a una variable */
     var table = $('#example').DataTable({
+        destroy: true,//para que al editar o eliminar no me de problemas de inicializacion de tabla
         /*estas de info y padding en false tienen que estar por que si no me pone esa funcionalidad */
         "paging": false,
         "info": false,
@@ -108,12 +120,13 @@ function cargarDatatable() {
     obtener_data("#example tbody", table);
     /*obtenemos los nuevos elementos para asignarle eventos*/
     var btn_Registrarnuevo = document.getElementById("btn_Registrarnuevo");//boton que se carga con la tabla Agregar Nuevo
-
     btn_Registrarnuevo.addEventListener("click", cargarmodal);//evento click del boton nuevo  de la tabla
 }
 
 var obtener_data = function (tbody, table) {
     $(tbody).on("click", "a.eliminar", function () {
+        var data = table.row($(this).parents("tr")).data();
+        id_comunero = data[0];
         preguntarsino();
     });
     $(tbody).on("click", "a.editar", function () {
@@ -127,112 +140,21 @@ function cargarmodal() {
 }
 /*aqui le decimos que cuando aga click en el boton nuevo no agrege el 
  modal al div respectivo, que luego nos ejecute una funcion llamada mostrarModal*/
-function rellenarmodal() {
-    fetch('../Controles?accion=editarSocio&id_comunero=' + id_comunero, {
-        method: 'POST'
-    }).then(res => res.json())
-            .then(data => {
-                if (data.error === 'error') {
-                    swal("Good job!", "You clicked the button!", "error");
-                } else if (data.cedula.length > 0) {
-                    //asiganmos los datos a una variable global para almacenar los datos objenidos del servidor y poder usarlos en todo el documento js
-                    json_comunero = data;
-                    cargarmodal();
-                    //$('#modales').load("TablaProyectoAguaJquery/modalRegistro.html", mostrarModal);
-                }
-            });
 
-}
-;
 
-/*Esta funcion se encarga de mostrar el modal y rellenar*/
-function mostrarModal() {
-    $('#staticBackdrop').modal();
-    var btn_guardar = document.getElementById("btn_guardarSoc");
-    var ref_input = document.getElementById("frmRESocios").querySelectorAll('input');
-    if (!json_comunero) {
-        /*obtenemos todos los selects que esten dentro del formulario con el id frmRESocios*/
-        var ref_select = document.getElementById("frmRESocios").querySelectorAll('select');
-        rellenarListaTipoUsuario(ref_select[0], "");
-    } else if (json_comunero) {
-        var ref_select = document.getElementById("frmRESocios").querySelectorAll('select');
-        ref_input[0].value = json_comunero.cedula;
-        ref_input[1].value = json_comunero.primer_nombre;
-        ref_input[2].value = json_comunero.segundo_nombre;
-        ref_input[3].value = json_comunero.primer_apellido;
-        ref_input[4].value = json_comunero.segundo_apellido;
-        ref_input[5].value = json_comunero.telefono;
-        ref_input[6].value = json_comunero.direccion_vivienda;
-        ref_input[7].value = json_comunero.referencia_geografica;
-        ref_input[8].value = json_comunero.nombre_comuna;
-        ref_input[9].value = json_comunero.fecha_nacimiento;
-        ref_input[10].value = json_comunero.edad;
-        ref_input[11].value = json_comunero.usuario;
-        ref_input[12].value = json_comunero.contrasenia;
-        if (json_comunero.pk_tipousuario !== 0) {
-            rellenarListaTipoUsuario(ref_select[0], json_comunero.pk_tipousuario);
-        } else if (json_comunero.pk_tipousuario <= 0) {
-            rellenarListaTipoUsuario(ref_select[0], "");
-        }
-        json_comunero = null;
-    }
-    btn_guardar.addEventListener("click", guardarSocio);
-}
-;
-
-function rellenarListaTipoUsuario(HTMLSelectElement, pk_tipousuario) {
-    //e.preventDefault();
-    fetch('../Controles?accion=listarTipoUsuarios', {
-        method: 'POST'
-    }).then(res => res.json())
-            .then(data => {
-                HTMLSelectElement.innerHTML = '';
-                HTMLSelectElement.innerHTML = `<option selected disabled value="">Seleccione una opcion</option>`;
-                //recorremos el json para rellenar la lista de opciones
-                for (let item of data) {
-                    if (item.error === "error") {
-                        swal("Good job!", "You clicked the button!", "error");
-                        break;
-                    } else if (item.tipo_usuario.length > 0) {
-                        HTMLSelectElement.innerHTML += `<option value="${item.pk_tipousuario}">${item.tipo_usuario}</option>`;
-                    }
-                }
-                HTMLSelectElement.value = pk_tipousuario;
-            });
-
-}
-;
-
-function guardarSocio() {
-    swal("¡Accion completada con exito!", {
-        icon: "success",
-    });
-}
-;
 
 function preguntarsino() {
     swal({
         title: "¿Estas Seguro?",
-        text: "¡Esta opcion eliminara todo registro referente a esta persona!",
+        text: "¡Esta persona ya no se tomara en cuenta para las demas actividades!",
         icon: "warning",
         dangerMode: true,
-        buttons: ["Cancelar", "Confirmar"],
+        buttons: ["Cancelar", "Confirmar"]
     })
             .then((willDelete) => {
                 if (willDelete) {
-                    /*aqui se ejecuta cualquier cosa en caso de aber dado en aceptar */
-                    swal("¡Accion completada con exito!", {
-                        icon: "success",
-                        timer: 2000,
-                        buttons: false,
-                    });
-                } else {
-                    swal("¡La accion se a cancelado!", {
-                        icon: "info",
-                        timer: 2000,
-                        buttons: false,
-                    });
-
+                    accion="Eliminar";
+                   GuardarActualizarEliminarSocio();
                 }
             });
 }

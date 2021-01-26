@@ -1,8 +1,6 @@
 
 package Modelo;
 
-import java.util.Date;
-
 public class Comunero {
     private int pk_comunero;
     private String cedula;

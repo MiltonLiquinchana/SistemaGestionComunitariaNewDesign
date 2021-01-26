@@ -16,47 +16,7 @@ public class DAOLoginImpl {/*con esto podemos usar la conexion sin crear objetos
     Login login;
     Tipousuario tipoUsuario;
 
-    /*public void registrar(Login login, Comunero comunero) throws Exception {
-        try {
-            conec = con.getConectionn();
-            //ya echa la conecion hacemos una consulta
-            //declaramos variables que necesitamos para hacer transacciones entre mysql
-            CallableStatement ps; //para usar esra se agrego la libreria
-            //tambien agregamos libreria
-            //aqui mandamos la consulta sql
-            ps = conec.prepareCall("{call guardar_usuario(?,?,?,?)}");
-            ps.setString(1, login.getUsuario());
-            ps.setString(2, login.getContrasenia());
-            ps.setInt(3, login.getTipoUsuario().getPk_tipousuario());
-            ps.setString(4, comunero.getCedula());
-            ps.execute();
-            JOptionPane.showMessageDialog(null, "Se guardo exitosamente los datos de login");
-        } catch (Exception e) {
-            //solo un mensaje en consola
-            JOptionPane.showMessageDialog(null, e);
-        }
-    }*/
- /*public void modificar(Login login) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }*/
-
- /*public void eliminar(Login login) throws Exception {
-        try {
-            conec = con.getConectionn();
-            //ya echa la conecion hacemos una consulta
-            //declaramos variables que necesitamos para hacer transacciones entre mysql
-            CallableStatement ps; //para usar esra se agrego la libreria
-            //tambien agregamos libreria
-            //aqui mandamos la consulta sql
-            ps = conec.prepareCall("{call eliminar_login(?)}");
-            ps.setInt(1, login.getComunero().getPk_comunero());
-            ps.execute();
-            JOptionPane.showMessageDialog(null, "Se elimino login exitosamente");
-        } catch (Exception e) {
-            //solo un mensaje en consola
-            JOptionPane.showMessageDialog(null, e);
-        }
-    }*/
+  
     public Login listar(String username, String password) throws SQLException {
         CallableStatement ps = null; //creamos una instancia para preparar el call
         try {

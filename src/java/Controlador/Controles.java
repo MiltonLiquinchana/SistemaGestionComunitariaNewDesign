@@ -1,38 +1,58 @@
 package Controlador;
 
 import Dao.DAOComuneroImpl;
+import Dao.DAOLimiteDias;
 import Dao.DAOLoginImpl;
+import Dao.DAOMedidorImpl;
+import Dao.DAOTipoConsumoImpl;
 import Dao.DAOTipousuarioImpl;
 import Modelo.Comunero;
+import Modelo.Consumo;
+import Dao.DAOConsumoImpl;
+import Modelo.LimiteDias;
 import Modelo.Login;
+import Modelo.Medidor;
+import Modelo.TipoConsumo;
 import Modelo.Tipousuario;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.List;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.swing.JOptionPane;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-/**
- *
- * @author MiltonLQ
- */
+@MultipartConfig//ponemos esto para que nos permita obtener datos mediante formdata
 public class Controles extends HttpServlet {
 
+    Login log;
+    Comunero comunero;
+    Consumo consumo;
+    TipoConsumo tipoconsumo;
+    LimiteDias limiteDias;
     /*creamos un objeto de daologinimpl para enviar los parametros para la conexion mediante la clase*/
     DAOLoginImpl daologinimpl;
-    Login log;
     DAOComuneroImpl dAOComuneroImpl;
     DAOTipousuarioImpl dAOTipousuarioImpl;
+    DAOMedidorImpl dAOMedidorImpl;
+    DAOConsumoImpl dAOConsumoImpl;
+    DAOTipoConsumoImpl dAOTipoConsumoImpl;
+    DAOLimiteDias dAOLimiteDias;
     //Creamos un objeto de tipo prinwriter esto para poder imprimir el json, desde el servlet
     PrintWriter out = null;
     JSONObject json;
     JSONArray arrjson;
+    boolean respuesta;//para poder obtener respuesta si se logro hacer la insercion
+    //Variables generales para obtener los datos del formulario RegistroSocios
+    String accion, cedula, primer_nombre, segundo_nombre, primer_apellido, segundo_Apellido, telefono, fecha_nacimiento,
+            direccion_vivienda, referencia_geografica, usuario, Contrasenia;
+    int pk_comuner, edad, fk_comuna, fk_tipousuario;
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -89,7 +109,34 @@ public class Controles extends HttpServlet {
             case "listarTipoUsuarios":
                 listarTipoUsuario(request, response);
                 break;
+            case "Guardar":
+                guardarRegistroSocio(request, response);
+                break;
 
+            case "Actualizar":
+                actualizarRegistroSocio(request, response);
+                break;
+            case "Eliminar":
+                //System.out.println("Eliminando datos de usuario");
+                eliminarRegistroSocio(request, response);
+                break;
+            case "buscarSocioConsumo":
+                buscarSocioConsumo(request, response);
+                break;
+            case "buscarUltimoConsumo":
+                buscarUltimoConsumoMedidor(request, response);
+                break;
+            case "ListarTipoConsumo":
+                listarTipoConsumo(request, response);
+                break;
+            case "buscarFechaLimite":
+                buscarDiasLimite(request, response);
+                break;
+            case "guardarConsumo":
+                guardarConsumo(request, response);
+                break;
+            case "ListConsumoImpaga":
+                listarConsumosImpaga(request, response);
         }
 
     }
@@ -99,6 +146,7 @@ public class Controles extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
+    //este metodo nos sirve para verificar el inicio de secion
     private void inicioSecion(HttpServletRequest request, HttpServletResponse response, String user, String passw) throws IOException {
 
         try {
@@ -165,7 +213,7 @@ public class Controles extends HttpServlet {
                 arrjson = new JSONArray();
                 json = new JSONObject();
                 json.put("error", "error");
-                arrjson.putAll(json);
+                arrjson.put(json);
                 out.print(arrjson);
                 out.close();
                 json = null;
@@ -184,12 +232,12 @@ public class Controles extends HttpServlet {
                     json.put("segundo_apellido", comunero.getSegundo_apellido());
                     json.put("telefono", comunero.getTelefono());
                     json.put("edad", comunero.getEdad());
-                    arrjson.putAll(json);
+                    arrjson.put(json);
                 }
                 out.print(arrjson);
                 out.close();
-                json=null;
-                arrjson=null;
+                json = null;
+                arrjson = null;
 
             }
 
@@ -218,7 +266,7 @@ public class Controles extends HttpServlet {
                 json.put("error", "error");
                 out.print(json);
                 out.close();
-                json=null;
+                json = null;
             } else if (log != null) {
                 //creamos una istancia del objeto jsonArray
                 json = new JSONObject();
@@ -238,7 +286,7 @@ public class Controles extends HttpServlet {
                 json.put("pk_tipousuario", log.getTipoUsuario().getPk_tipousuario());
                 out.print(json);
                 out.close();
-                json=null;
+                json = null;
             }
         } catch (SQLException e) {
             System.out.println("Error no se a podido obtener los datos " + e.getMessage());
@@ -264,11 +312,11 @@ public class Controles extends HttpServlet {
                 arrjson = new JSONArray();
                 json = new JSONObject();
                 json.put("error", "error");
-                arrjson.putAll(json);
+                arrjson.put(json);
                 out.print(arrjson);
                 out.close();
-                json=null;
-                arrjson=null;
+                json = null;
+                arrjson = null;
             } else if (lista.size() >= 1) {
                 //creamos una istancia del objeto jsonArray
                 arrjson = new JSONArray();
@@ -277,15 +325,330 @@ public class Controles extends HttpServlet {
                     json = new JSONObject();
                     json.put("pk_tipousuario", tipousuario.getPk_tipousuario());
                     json.put("tipo_usuario", tipousuario.getTipo_usuario());
-                    arrjson.putAll(json);
+                    arrjson.put(json);
                 }
                 out.print(arrjson);
                 out.close();
-                json=null;
-                arrjson=null;
+                json = null;
+                arrjson = null;
 
             }
 
+        } catch (SQLException e) {
+            System.out.println("Error no se a podido obtener los datos " + e.getMessage());
+            out.close();
+        }
+    }
+
+    /*este metodo sirve para crear un nuevo registro en la BD del comunero*/
+    private void guardarRegistroSocio(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            accion = request.getParameter("accion");
+            cedula = request.getParameter("cedula");
+            primer_nombre = request.getParameter("pNombre");
+            segundo_nombre = request.getParameter("sNombre");
+            primer_apellido = request.getParameter("pApellido");
+            segundo_Apellido = request.getParameter("sApellido");
+            telefono = request.getParameter("nTelefono");
+            fecha_nacimiento = request.getParameter("fechNacimiento");
+            direccion_vivienda = request.getParameter("direccion");
+            referencia_geografica = request.getParameter("refGeografica");
+            usuario = request.getParameter("nUsuario");
+            Contrasenia = request.getParameter("contrasenia");
+            edad = Integer.parseInt(request.getParameter("edad"));
+            HttpSession session = request.getSession();
+            fk_comuna = Integer.parseInt(String.valueOf(session.getAttribute("pk_comunidad")));//esto se obtiene desde la session
+            fk_tipousuario = Integer.parseInt(request.getParameter("tipoUsuario"));
+            respuesta = dAOComuneroImpl.registrarEditarEliminar(accion, 1, cedula, primer_nombre, segundo_nombre, primer_apellido, segundo_Apellido, telefono, fecha_nacimiento, edad, fk_comuna, direccion_vivienda, referencia_geografica, usuario, Contrasenia, fk_tipousuario);
+            //System.out.println(respuesta);
+            //creamoun objeto con el cual vamos a imprimir el resultado a json
+            out = response.getWriter();
+            json = new JSONObject();//creamos una instancia de  la clase json          
+            if (respuesta) {
+                json.put("message", "Error");//asignamos el mensaje correspondire true si no se guardo, false si se guardo
+            } else {
+                json.put("message", "Completado");//asignamos el mensaje correspondire true si no se guardo, false si se guardo
+            }
+            //mandamos el json
+            out.print(json);
+            out.close();//cerramos la imprecion
+            json = null;//limpiamos el json
+        } catch (SQLException e) {
+            System.out.println("Error no se a podido procesar la peticion " + e.getMessage());
+            out.close();
+        }
+    }
+
+    /*este metodo sirve para actualizar los registros de un socio en la BD*/
+    private void actualizarRegistroSocio(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            accion = request.getParameter("accion");
+            pk_comuner = Integer.parseInt(request.getParameter("pk_comuner"));
+            cedula = request.getParameter("cedula");
+            primer_nombre = request.getParameter("pNombre");
+            segundo_nombre = request.getParameter("sNombre");
+            primer_apellido = request.getParameter("pApellido");
+            segundo_Apellido = request.getParameter("sApellido");
+            telefono = request.getParameter("nTelefono");
+            fecha_nacimiento = request.getParameter("fechNacimiento");
+            direccion_vivienda = request.getParameter("direccion");
+            referencia_geografica = request.getParameter("refGeografica");
+            usuario = request.getParameter("nUsuario");
+            Contrasenia = request.getParameter("contrasenia");
+            edad = Integer.parseInt(request.getParameter("edad"));
+            HttpSession session = request.getSession();
+            fk_comuna = Integer.parseInt(String.valueOf(session.getAttribute("pk_comunidad")));//esto se obtiene desde la session
+            fk_tipousuario = Integer.parseInt(request.getParameter("tipoUsuario"));
+            respuesta = dAOComuneroImpl.registrarEditarEliminar(accion, pk_comuner, cedula, primer_nombre, segundo_nombre, primer_apellido, segundo_Apellido, telefono, fecha_nacimiento, edad, fk_comuna, direccion_vivienda, referencia_geografica, usuario, Contrasenia, fk_tipousuario);
+            System.out.println(respuesta);
+            //creamoun objeto con el cual vamos a imprimir el resultado a json
+            out = response.getWriter();
+            json = new JSONObject();//creamos una instancia de  la clase json          
+            if (respuesta) {
+                json.put("message", "Error");//asignamos el mensaje correspondire true si no se guardo, false si se guardo
+            } else {
+                json.put("message", "Completado");//asignamos el mensaje correspondire true si no se guardo, false si se guardo
+            }
+            //mandamos el json
+            out.print(json);
+            out.close();//cerramos la imprecion
+            json = null;//limpiamos el json
+        } catch (SQLException e) {
+            System.out.println("Error no se a podido procesar la peticion " + e.getMessage());
+            out.close();
+        }
+    }
+
+    /*este metodo sirve para eliminar un registro enrealidad solo lo desabilita*/
+    private void eliminarRegistroSocio(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            accion = request.getParameter("accion");
+            pk_comuner = Integer.parseInt(request.getParameter("pk_comuner"));
+            respuesta = dAOComuneroImpl.registrarEditarEliminar(accion, pk_comuner, "", "", "", "", "", "", "2021-01-18", 1, 1, "", "", "", "", 1);
+            System.out.println(respuesta);
+            //creamoun objeto con el cual vamos a imprimir el resultado a json
+            out = response.getWriter();
+            json = new JSONObject();//creamos una instancia de  la clase json          
+            if (respuesta) {
+                json.put("message", "Error");//asignamos el mensaje correspondire true si no se guardo, false si se guardo
+            } else {
+                json.put("message", "Completado");//asignamos el mensaje correspondire true si no se guardo, false si se guardo
+            }
+            //mandamos el json
+            out.print(json);
+            out.close();//cerramos la imprecion
+            json = null;//limpiamos el json
+        } catch (SQLException e) {
+            System.out.println("Error no se a podido procesar la peticion " + e.getMessage());
+            out.close();
+        }
+    }
+
+    /*este metodo sirve para buscar los datos basicos del comunero y sus numeros de medidor*/
+    private void buscarSocioConsumo(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        try {
+            //creamoun objeto con el cual vamos a imprimir el resultado a json
+            out = response.getWriter();
+            String dato = request.getParameter("dato");
+            dAOComuneroImpl = new DAOComuneroImpl();
+            comunero = new Comunero();
+            comunero = dAOComuneroImpl.consultaComuneroCedula(dato);
+            arrjson = new JSONArray();
+            //obtenemos el listado de los numeros de medidor
+            List<Medidor> lista = null;
+            dAOMedidorImpl = new DAOMedidorImpl();
+            lista = dAOMedidorImpl.listar(dato);
+            //System.out.println(lista.size());
+            if (comunero == null || lista.size() <= 0) {
+                json = new JSONObject();
+                json.put("error", "error");
+                arrjson.put(json);
+            }
+            if (comunero != null) {
+                json = new JSONObject();
+                //agregamos propiedades al json
+                json.put("pk_comunero", comunero.getPk_comunero());
+                json.put("cedula", comunero.getCedula());
+                json.put("primer_nombre", comunero.getPrimer_nombre());
+                json.put("segundo_nombre", comunero.getSegundo_nombre());
+                json.put("primer_apellido", comunero.getPrimer_apellido());
+                json.put("segundo_apellido", comunero.getSegundo_apellido());
+                arrjson.put(json);
+            }
+            if (lista.size() >= 1) {
+                for (Medidor medidor : lista) {
+                    json = new JSONObject();
+                    json.put("pk_medidor", medidor.getPk_medidor());
+                    json.put("numero_medidor", medidor.getNumero_medidor());
+                    arrjson.put(json);
+                }
+            }
+            out.print(arrjson);
+            out.close();
+            json = null;
+            arrjson = null;
+        } catch (SQLException e) {
+            System.out.println("Error no se a podido obtener los datos " + e.getMessage());
+            out.close();
+        }
+    }
+
+    /*este metodo sirve para buscar el ultimo consumo registrado del medidor*/
+    private void buscarUltimoConsumoMedidor(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            int pk_medidor = Integer.parseInt(request.getParameter("pk_medidor"));
+            out = response.getWriter();
+            consumo = new Consumo();
+            dAOConsumoImpl = new DAOConsumoImpl();
+            consumo = dAOConsumoImpl.consultarUltimoConsumoMedidor(pk_medidor);
+            if (consumo.getLectura_anterior() == null) {
+                json = new JSONObject();
+                json.put("error", "error");
+            } else if (consumo.getLectura_anterior() != null) {
+                json = new JSONObject();
+                json.put("lectura_anterior", consumo.getLectura_anterior());
+            }
+            out.print(json);
+            out.close();
+            json = null;
+        } catch (SQLException e) {
+            System.out.println("Error no se a podido obtener los datos " + e.getMessage());
+            out.close();
+        }
+
+    }
+
+    /*este metodo nos sive para definir el tipo de consumo dependiendo de cuanto consumio*/
+    private void listarTipoConsumo(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            //creamos un objeto para la imprecion
+            out = response.getWriter();
+            //creamos un objeto de tipo json para parsear el objeto de tipo consumo
+            //recuperamos el valor enviado desde el formulario
+            int valor = Integer.parseInt(request.getParameter("valor"));
+            tipoconsumo = new TipoConsumo();
+            dAOTipoConsumoImpl = new DAOTipoConsumoImpl();
+            HttpSession session = request.getSession();
+            tipoconsumo = dAOTipoConsumoImpl.listarTipoConsumo(Integer.parseInt(String.valueOf(session.getAttribute("pk_comunidad"))), valor);
+            if (tipoconsumo == null) {
+                json = new JSONObject();
+                json.put("error", "error");
+
+            } else if (tipoconsumo != null) {
+                json = new JSONObject();
+                json.put("pk_tipoconsumo", tipoconsumo.getPk_tipoconsumo());
+                json.put("tipoConsumo", tipoconsumo.getTipo_consumo());
+                double totalpagar = 0;
+                if (valor <= tipoconsumo.getLimitem_cubico() && tipoconsumo.getTarifa_basica() > 0) {
+                    totalpagar = tipoconsumo.getTarifa_basica();
+                }
+                if (valor > tipoconsumo.getLimitem_cubico() && tipoconsumo.getTarifa_basica() > 1) {
+                    totalpagar = Double.valueOf(valor) * tipoconsumo.getValor();
+                }
+                if (valor <= tipoconsumo.getLimitem_cubico() && tipoconsumo.getTarifa_basica() < 1) {
+                    totalpagar = Double.valueOf(valor) * tipoconsumo.getValor();
+                }
+                if (valor > tipoconsumo.getLimitem_cubico() && tipoconsumo.getTarifa_basica() < 1) {
+                    totalpagar = Double.valueOf(valor) * tipoconsumo.getValor();
+                }
+                json.put("totalPagar", totalpagar);
+            }
+            out.print(json);
+            out.close();
+            json = null;
+
+        } catch (SQLException e) {
+            System.out.println("Error no se a podido obtener los datos " + e.getMessage());
+            out.close();
+        }
+    }
+
+    /*este metodo sirve para consulta el limite de dias para pagar este valor se agrega a la fecha actual*/
+    private void buscarDiasLimite(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+
+            out = response.getWriter();
+            limiteDias = new LimiteDias();
+            dAOLimiteDias = new DAOLimiteDias();
+            HttpSession session = request.getSession();
+            limiteDias = dAOLimiteDias.buscarLimiteDias(Integer.parseInt(String.valueOf(session.getAttribute("pk_comunidad"))));
+            if (limiteDias == null) {
+                json = new JSONObject();
+                json.put("error", "error");
+            } else if (limiteDias != null) {
+                json = new JSONObject();
+                json.put("LimiteDias", limiteDias.getLimiteDias());
+            }
+            out.print(json);
+            out.close();
+            json = null;
+
+        } catch (Exception e) {
+        }
+    }
+
+    /*este metodo sive para guardar los datos del consumo*/
+    private void guardarConsumo(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            out = response.getWriter();
+            /*recuperamos lo enviado desde el fomrulario*/
+            int lectura_ante, lectura_actual, consumo_mcubic, fk_medido, fk_tipoconsumo;
+            String fecha_lectu, fecha_limit;
+            double total_pag;
+            lectura_ante = Integer.parseInt(request.getParameter("lecturaAnterior"));
+            lectura_actual = Integer.parseInt(request.getParameter("lecturaActual"));
+            consumo_mcubic = Integer.parseInt(request.getParameter("conumoCubico"));
+            fk_medido = Integer.parseInt(request.getParameter("numMedidor"));
+            fk_tipoconsumo = Integer.parseInt(request.getParameter("tipoConsumo"));
+            fecha_lectu = request.getParameter("fechaRegistro");
+            fecha_limit = request.getParameter("fechaLimite");
+            total_pag = Double.parseDouble(request.getParameter("totalPagar"));
+            dAOConsumoImpl = new DAOConsumoImpl();
+            respuesta = dAOConsumoImpl.registrar(lectura_ante, lectura_actual, fecha_lectu, fecha_limit, consumo_mcubic, total_pag, fk_medido, fk_tipoconsumo);
+            System.out.println(respuesta);
+            json = new JSONObject();//creamos una instancia de  la clase json          
+            if (respuesta) {
+                json.put("message", "Error");//asignamos el mensaje correspondire true si no se guardo, false si se guardo
+            } else {
+                json.put("message", "Completado");//asignamos el mensaje correspondire true si no se guardo, false si se guardo
+            }
+            out.print(json);
+            out.close();
+            json = null;
+        } catch (SQLException e) {
+            System.out.println("Error no se a podido procesar la peticion " + e.getMessage());
+            out.close();
+        }
+
+    }
+
+    private void listarConsumosImpaga(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        try {
+            out = response.getWriter();
+            int pk_medidor = Integer.parseInt(request.getParameter("fk_medidor"));
+            List<Consumo> lista = null;
+            dAOConsumoImpl = new DAOConsumoImpl();
+            lista = dAOConsumoImpl.ListarConsumoImpaga(pk_medidor);
+            arrjson = new JSONArray();
+            if (lista.size() <= 0) {
+                json = new JSONObject();
+                json.put("error", "error");
+                arrjson.put(json);
+            } else {
+                for (Consumo consumo : lista) {
+                    json = new JSONObject();
+                    json.put("pk_consumo", consumo.getPk_consumo());
+                    json.put("fecha_lectura", consumo.getFecha_lectura());
+                    arrjson.put(json);
+                }
+            }
+
+            out.print(arrjson);
+            out.close();
+            json = null;
+            arrjson = null;
         } catch (SQLException e) {
             System.out.println("Error no se a podido obtener los datos " + e.getMessage());
             out.close();
