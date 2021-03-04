@@ -47,7 +47,7 @@ public class DAOConsumoImpl {
         return consumo;
     }
     
-    public boolean registrar(int lectura_ante, int lectura_actual, String fecha_lectu, String fecha_limit, int consumo_mcubic, double total_pag, int fk_medido, int fk_tipoconsumo) throws SQLException {
+    public boolean registrar(int lectura_ante, int lectura_actual, String fecha_lectu, String fecha_limit, int consumo_mcubic, double total_pag, int fk_medido, int fk_tipoconsumo, int fk_comun) throws SQLException {
         //declaramos variables que necesitamos para hacer transacciones entre mysql
         CallableStatement ps = null; //para usar esra se agrego la libreria
         try {
@@ -55,7 +55,7 @@ public class DAOConsumoImpl {
             //ya echa la conecion hacemos una consulta
             //tambien agregamos libreria
             //aqui mandamos la consulta sql
-            ps = conec.prepareCall("{call guardarConsumo(?,?,?,?,?,?,?,?)}");
+            ps = conec.prepareCall("{call guardarConsumo(?,?,?,?,?,?,?,?,?)}");
             ps.setInt(1, lectura_ante);
             ps.setInt(2, lectura_actual);
             ps.setString(3, fecha_lectu);
@@ -64,6 +64,7 @@ public class DAOConsumoImpl {
             ps.setDouble(6, total_pag);
             ps.setInt(7, fk_medido);
             ps.setInt(8, fk_tipoconsumo);
+            ps.setInt(9, fk_comun);
             registrocomunero = ps.execute();
             ps.close();
             Conexion.getInstace().closeConnection(conec);

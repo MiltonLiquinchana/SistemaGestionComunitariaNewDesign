@@ -94,7 +94,7 @@ public class DAOComuneroImpl {
 
 
     /*metodo para listar los datos del comunero por el numero de cedula o nombres completos*/
-    public Comunero consultaComuneroCedula(String dato) throws SQLException {
+    public Comunero consultaComuneroCedula(String dato,int fk_comuna) throws SQLException {
         
         CallableStatement ps = null; //para usar esra se agrego la libreria
         try {
@@ -103,8 +103,9 @@ public class DAOComuneroImpl {
             //declaramos variables que necesitamos para hacer transacciones entre mysql       
             ResultSet res; //tambien agregamos libreria
             //aqui mandamos la consulta sql
-            ps = conec.prepareCall("{call consultaDatosComunero(?)}");
+            ps = conec.prepareCall("{call consultaDatosComunero(?,?)}");
             ps.setString(1, dato);
+            ps.setInt(2, fk_comuna);
             res = ps.executeQuery();
             //con esto ejecutamos la consulta
             //con un if evaluamos si la consulta tiene resultados

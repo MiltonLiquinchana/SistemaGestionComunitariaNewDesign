@@ -72,7 +72,7 @@ foreign key(fk_comunero) references comunero(pk_comunero)
 si se guarda aqui, lo mismo se aplica para el login el mismo tipo de condicional*/
 create table medidor(
 pk_medidor int primary key auto_increment not null,
-numero_medidor varchar(30) not null,
+numero_medidor varchar(30) unique not null,
 fecha_conexion date not null,
 fk_comunero int not null,
 foreign key(fk_comunero) references comunero(pk_comunero)
@@ -140,11 +140,16 @@ create table cobro_agua(
 pk_cobro_agua int primary key auto_increment not null,
 fk_consumo int not null,
 fecha_cacelacion date not null,/*Fecha en la que se esta cancelando al aguatero*/
-dias_retraso char(10) not null,/*Se calcula al verificar la fecha cancelacion con fecha limite
+dias_retraso int not null,/*Se calcula al verificar la fecha cancelacion con fecha limite
 (si fecha de cancelacion es superior a tantos dias comenar a calcular los dias de retraso)*/
-fk_multas int null,
+fk_multas int not null,
 valor_multa decimal(8,2) not null,
+tarifa_basicaC decimal(8,2) not null,
+tarifa_ambienteC decimal(8,2) not null,
+alcantarilladoC decimal(8,2) not null,
 totalpagar decimal(8,2) not null,/*Se calcula al multiplicar valor multa por dias retraso + el consumo metros cubicos(revisar doc excel)*/
+deposito decimal(8,2) not null,
+cambio decimal(8,2) not null,
 fk_estado_pagos int not null,
 foreign key(fk_consumo) references consumo(pk_consumo),
 foreign key(fk_multas) references multas(pk_multas),

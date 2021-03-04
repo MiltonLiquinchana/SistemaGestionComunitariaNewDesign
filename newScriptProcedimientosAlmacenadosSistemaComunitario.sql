@@ -52,8 +52,8 @@ fk_tipousuari int
 )
 begin
 if accion="Guardar" then
-insert into comunero(cedula,primer_nombre,segundo_nombre,primer_apellido,segundo_apellido,telefono,fecha_nacimiento,edad,fk_comuna,direccion_vivienda,referencia_geografica)
-				values(cedul,primer_nombr,segundo_nombr,primer_apellid,segundo_apellid,telefon,fecha_nacimient,eda,fk_comun,direccion_viviend,referencia_geografic);
+insert into comunero(cedula,primer_nombre,segundo_nombre,primer_apellido,segundo_apellido,telefono,fecha_nacimiento,edad,fk_comuna,direccion_vivienda,referencia_geografica,fk_estadoComunero)
+				values(cedul,primer_nombr,segundo_nombr,primer_apellid,segundo_apellid,telefon,fecha_nacimient,eda,fk_comun,direccion_viviend,referencia_geografic,1);
                 insert into login(usuario,contraseña,fk_tipousuario,fk_comunero)
 							values(usuari,contrase,fk_tipousuari,(select pk_comunero from comunero where cedula=cedul));
 elseif accion="Actualizar" then
@@ -77,38 +77,14 @@ end if;
 end$$
 DELIMITER $$;
 
-DELIMITER $$
-create procedure guardarConsumo(
-lectura_ante int,
-lectura_actual int,
-fecha_lectu varchar(15),
-fecha_limit varchar(15),
-consumo_mcubi int,
-total_pag double,
-nummedidor varchar(15),
-tipocon varchar(15))
-BEGIN
-insert into consumo (lectura_anterior,lectura_actual,fecha_lectura,fecha_limite_pago,consumo_mcubico,total_pagar,fk_medidor,fk_tipoconsumo) values(lectura_ante,lectura_actual,fecha_lectu,fecha_limit,consumo_mcubi,total_pag,(select pk_medidor from medidor where numero_medidor=nummedidor),
-(select pk_tipoconsumo from tipoconsumo where tipo_consumo=tipocon and fk_comuna=(select fk_comuna from comunero where pk_comunero=(select fk_comunero from medidor where numero_medidor=nummedidor))));
-insert into cobro_agua(
-fk_consumo,
-fecha_cacelacion,
-dias_retraso,
-fk_multas,
-valor_multa ,
-totalpagar ,
-fk_estado_pagos ) values(
-(select max(pk_consumo) as pk_consumo from consumo where fk_medidor=(select pk_medidor from medidor where numero_medidor=nummedidor)),
-fecha_limit,0,1,0,total_pag,2
- );
-end $$
-DELIMITER $$;
+
 
 /*procedimiento almacenado para consultar los datos del comunero por su cedula u nombres, este procedimiento 
-nos sirve para poder hacer el guardado del consumo en la bd*/
-create procedure consultaDatosComunero(dato varchar(300))
+nos sirve para poder hacer el guardado del consumo en la bd*//*****************************************
+establecer que solo se pueda consultar de la misma comuna********************************************/
+create procedure consultaDatosComunero(dato varchar(300),fk_comun int)
 select pk_comunero,cedula,primer_nombre, segundo_nombre,primer_apellido,segundo_apellido from comunero 
-where cedula=dato or CONCAT(primer_nombre," ",segundo_nombre," ",primer_apellido," ",segundo_apellido) = dato;
+where (cedula=dato or CONCAT(primer_nombre," ",segundo_nombre," ",primer_apellido," ",segundo_apellido) = dato) and fk_comuna=fk_comun;
 
 /*este procedimiento almacenado nos sirve para listar los medidores que tiene una persona, esto se ejecuta al mismo tiempo de haber ejecutado el
 procedimiento almacenado para listar los datos basicos del comunero por su cedula*/
@@ -142,7 +118,8 @@ fecha_limit varchar(15),
 consumo_mcubic int,
 total_pag double,
 fk_medido int,
-fk_tipoconsum int)
+fk_tipoconsum int,
+fk_comun int)
 BEGIN
 insert into consumo (lectura_anterior,lectura_actual,fecha_lectura,fecha_limite_pago,consumo_mcubico,total_pagar,fk_medidor,fk_tipoconsumo)
 values(lectura_ante,lectura_actual,fecha_lectu,fecha_limit,consumo_mcubic,total_pag,fk_medido,fk_tipoconsum);
@@ -151,10 +128,20 @@ fk_consumo,
 fecha_cacelacion,
 dias_retraso,
 fk_multas,
-valor_multa ,
-totalpagar ,
+valor_multa,
+tarifa_basicaC,
+tarifa_ambienteC,
+alcantarilladoC,
+totalpagar,
+deposito,
+cambio,
 fk_estado_pagos) 
-values((select max(pk_consumo) as pk_consumo from consumo where fk_medidor=fk_medido),fecha_limit,0,1,0,total_pag,2);
+values((select max(pk_consumo) as pk_consumo from consumo where fk_medidor=fk_medido),fecha_limit,0,1,0,
+(select tarifa_basica from tipoconsumo where pk_tipoconsumo=fk_tipoconsum),
+(select tarifa_ambiente from tipoconsumo where pk_tipoconsumo=fk_tipoconsum),
+(select alcantarillado from tipoconsumo where pk_tipoconsumo=fk_tipoconsum),
+total_pag,
+0,0,2);
 end $$
 DELIMITER $$;
 
@@ -165,7 +152,83 @@ begin
 select pk_consumo,fecha_lectura
 from consumo join cobro_agua
 on consumo.pk_consumo=cobro_agua.fk_consumo
-where fk_medidor=1 and fk_estado_pagos=2;
+where fk_medidor=pk_medid and fk_estado_pagos=2;
 end$$
 DELIMITER $$;
 
+/*procedimiento almacenado para consultar los datos del consumo seleccionado*/
+DELIMITER $$
+create procedure buscarDatosConsumoImpaga(fk_consum int,fk_comun int)
+begin
+select consumo_mcubico,tipo_consumo,fecha_lectura, fecha_limite_pago,total_pagar as subtotal,
+(if(curdate()>fecha_limite_pago,"Retraso","Sin Recargo"))as tipo_multa,
+(
+if(curdate()>fecha_limite_pago,(select valor from multas 
+ where tipo_multa="Retraso"
+and fk_comuna=fk_comun),"0")
+)as valor_multa,tarifa_ambiente,alcantarillado from consumo
+join tipoconsumo
+on pk_tipoconsumo=fk_tipoconsumo
+where pk_consumo=fk_consum;
+end$$
+DELIMITER $$;
+
+/*procedimiento almacenado para guardar el pago del consumo*/
+create procedure guardarPagoConsumo(
+dias_retras int, 
+valor_totalmulta double,
+total_pagado double,
+fk_consum int,
+fk_comun int,
+deposit double,
+cambi double)
+update cobro_agua set fecha_cacelacion=curdate(),dias_retraso=dias_retras,
+fk_multas=(select if(curdate()>(select fecha_limite_pago from consumo where pk_consumo=fk_consum),
+(select pk_multas from multas where tipo_multa="Retraso" and fk_comuna=fk_comun),1)),
+valor_multa=valor_totalmulta,
+totalpagar=total_pagado,
+deposito=deposit,
+cambio=cambi,
+fk_estado_pagos=1
+where fk_consumo=fk_consum;
+
+/*procedimiento almacenado para consultar datos para la factura,
+modificar es****************************************************************************************************
+este procedimiento almacenado debe consultar el ttarifa ambiente, alcantarillado de la misma tabla
+esto en caso de reimprecion de factura, por eso se debe remodificar la tabla cobro de agua
+y agregar esas columnas*/
+create procedure consultaDatosFactura(pk_consum int)
+select primer_apellido, segundo_apellido, primer_nombre, segundo_nombre, cedula, telefono,direccion_vivienda,
+numero_medidor, fecha_lectura,fecha_limite_pago,lectura_anterior, lectura_actual,tipo_consumo,consumo_mcubico,tarifa_basicaC,
+consumo.total_pagar as subtotal,tarifa_ambienteC, alcantarilladoC,tipo_multa,dias_retraso,valor_multa as total_multa, 
+cobro_agua.totalpagar,deposito,cambio from comunero
+join medidor
+on pk_comunero=fk_comunero
+join consumo
+on pk_medidor=fk_medidor
+join tipoconsumo
+on pk_tipoconsumo=fk_tipoconsumo
+join cobro_agua
+on pk_consumo=fk_consumo
+join multas
+on pk_multas=fk_multas
+where pk_consumo=pk_consum;
+
+
+
+/*procedimiento almacenado para mostrar el conteo de cuantos pagos hay, este valor se usara para generar el numero de factura*/
+create procedure numFac(
+fk_comun int
+)
+select count(pk_cobro_agua) as conteo from cobro_agua
+join consumo
+on pk_consumo=fk_consumo
+join medidor
+on pk_medidor=fk_medidor
+join comunero
+on pk_comunero=fk_comunero
+where fk_comuna=fk_comun and fk_estado_pagos=1;
+
+/*corregir problema de update cuando no tiene usuario ni contraseña, no se guarda*/
+/*agregar mensaje que avise si se configuro un limite de dias*/
+select * from cobro_agua;

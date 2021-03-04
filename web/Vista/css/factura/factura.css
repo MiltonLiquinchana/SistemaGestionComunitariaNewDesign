@@ -1,0 +1,557 @@
+* {
+    border: 0px;
+    margin: 0px;
+    padding: 0px;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+}
+
+#contenido {
+    margin: auto;
+    width: 700px;
+    *height: 100%;
+    border: 2px black solid;
+    background-color: #e7e6e6;
+    /*#e7e6e6*/
+}
+
+#encabezadoFactura {
+    width: 100%;
+    height: 100px;
+    border-bottom: 2px black solid;
+    display: flex;
+    flex-direction: row;
+}
+
+#encabezadoFactura #imagen {
+    width: 200px;
+    height: 100%;
+}
+
+#encabezadoFactura #imagen img {
+    width: 100%;
+    height: 100%;
+}
+
+#encabezadoFactura #titleencabezadoFactura {
+    border-left: 2px black solid;
+    border-right: 2px black solid;
+    width: 100%;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bold;
+    text-align: center;
+}
+
+#encabezadoFactura #titleencabezadoFactura #tituloEncabesado {
+    font-size: 16px;
+}
+
+#encabezadoFactura #titleencabezadoFactura #textoTitle {
+    font-size: 12px;
+    color: rgb(66, 65, 65);
+}
+
+#encabezadoFactura #titleencabezadoFactura #acuerdo {
+    font-size: 12px;
+}
+
+#encabezadoFactura #titleencabezadoFactura #direccionTitle, #encabezadoFactura #titleencabezadoFactura #direccionTitlecity {
+    font-size: 12px;
+}
+
+#numFactura {
+    width: 60%;
+    height: 100%;
+}
+
+#numFactura #numeralFactura {
+    border-bottom: 2px black solid;
+}
+
+#numFactura #numeralFactura div {
+    padding: 0px !important;
+    margin: 0px !important;
+}
+
+#numFactura #numeralFactura div label {
+    width: 100%;
+    text-align: center;
+    font-size: 15px;
+    font-weight: bold;
+    font-family: 'Times New Roman', Times, serif;
+    padding: 0px !important;
+    margin: 0px !important;
+    border: 0px;
+}
+
+#numFactura #numeralFactura div input {
+    text-align: center;
+    font-size: 15px;
+    font-weight: bold;
+    font-family: 'Times New Roman', Times, serif;
+    color: red;
+    padding: 0px !important;
+    margin: 0px !important;
+    border: 0px;
+}
+
+#numFactura #numeralRuc {
+    width: 100%;
+}
+
+#numFactura #numeralRuc .row {
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+}
+
+#numFactura #numeralRuc .row label {
+    margin: 0px;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+#numFactura #numeralRuc .col-sm-9 {
+    margin: 0px;
+}
+
+#numFactura #numeralRuc .col-sm-9 input {
+    margin: 0px;
+    width: 100%;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+#detallesCliente {
+    width: 100%;
+    border-bottom: 2px black solid;
+}
+
+#detalleCliente {
+    width: 100%;
+    margin: 0px;
+}
+
+#detalleCliente .col-md-6 {
+    margin: 0px;
+}
+
+#detalleCliente .col-md-6 .row {
+    margin: 0px;
+}
+
+#detalleCliente .col-md-6 .row label {
+    margin: 0px;
+    font-size: 15px;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bold;
+}
+
+#detalleCliente .col-md-6 .row div input {
+    width: 100%;
+    margin: 0px;
+    font-size: 12px;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bold;
+}
+
+#detalleCliente #fechaConsumo {
+    margin: 0px;
+}
+
+#detalleCliente #fechaConsumo div {
+    margin: 0px;
+}
+
+#detalleCliente #fechaConsumo div label, #detalleCliente #fechaConsumo div input {
+    width: 100%;
+    margin: 0px;
+    font-size: 15px;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bold;
+    text-align: center;
+}
+
+#detallePago #titledetallePago {
+    border-bottom: 2px black solid;
+    text-align: center;
+    width: 100%;
+    font-size: 16px;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bold;
+}
+
+#detallePago #curpodetallePago {
+    width: 100%;
+    margin: 0px;
+}
+
+#detallePago #curpodetallePago .row {
+    margin: 0px;
+}
+
+#detallePago #curpodetallePago .row label, #detallePago #curpodetallePago .row div {
+    font-size: 15px;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bold;
+    margin: 0px;
+}
+
+#detallePago #curpodetallePago .row div input {
+    margin: 0px;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+#firmas {
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
+    margin-top: 50px;
+    padding-bottom: 20px;
+}
+
+#firmas .col {
+    padding: 0px;
+    margin: 0px;
+}
+
+#firmas .col input {
+    width: 200px;
+    margin: auto;
+    border-radius: 0px;
+    border: none;
+    border-top: 2px black solid;
+    padding: 0px;
+    background-color: transparent;
+}
+
+@media (max-width: 768px) {
+    #contenido {
+        margin: auto;
+        height: unset;
+        width: unset;
+    }
+    #encabezadoFactura {
+        width: 100%;
+        height: unset;
+        border-bottom: 2px black solid;
+        display: block;
+    }
+    #encabezadoFactura #imagen {
+        display: none;
+    }
+    #encabezadoFactura #imagen img {
+        display: none;
+    }
+    #encabezadoFactura #titleencabezadoFactura {
+        border-left: 0px;
+        border-right: 0px;
+        width: 100%;
+        border-bottom: 2px black solid;
+    }
+    #encabezadoFactura #titleencabezadoFactura #tituloEncabesado {
+        font-size: 30px;
+    }
+    #encabezadoFactura #titleencabezadoFactura #textoTitle {
+        font-size: 18px;
+    }
+    #encabezadoFactura #titleencabezadoFactura #acuerdo {
+        font-size: 15px;
+    }
+    #encabezadoFactura #titleencabezadoFactura #direccionTitle, #encabezadoFactura #titleencabezadoFactura #direccionTitlecity {
+        font-size: 15px;
+    }
+    #numFactura {
+        width: 100%;
+        height: unset;
+    }
+    #numFactura #numeralFactura {
+        border-bottom: 2px black solid;
+    }
+    #numFactura #numeralFactura div {
+        margin: 0px !important;
+        padding: 0px 0px 0px 20px !important;
+    }
+    #numFactura #numeralFactura div label {
+        text-align: unset;
+        font-size: 20px;
+    }
+    #numFactura #numeralFactura div input {
+        text-align: unset;
+        font-size: 20px;
+    }
+    #numFactura #numeralRuc .row label {
+        padding: 0px 0px 0px 15px;
+        font-size: 20px;
+    }
+    #numFactura #numeralRuc .col-sm-9 {
+        margin: 0px;
+    }
+    #numFactura #numeralRuc .col-sm-9 input {
+        margin: 0px;
+        font-size: 20px;
+    }
+    #detalleCliente .col-md-6 .row label {
+        font-size: 20px;
+    }
+    #detalleCliente .col-md-6 .row div input {
+        font-size: 15px;
+    }
+    #detalleCliente #fechaConsumo div label, #detalleCliente #fechaConsumo div input {
+        font-size: 20px;
+    }
+    #detallePago #titledetallePago {
+       
+        font-size: 21px;
+    }
+  
+    #detallePago #curpodetallePago .row label, #detallePago #curpodetallePago .row div {
+        font-size: 20px;
+    }
+    #detallePago #curpodetallePago .row div input {
+        
+        font-size: 20px;
+    }
+    #firmas {
+        margin-top: 0px;
+        padding-bottom: 20px;
+    }
+    #firmas .col {
+        margin-top: 50px;
+    }
+}
+
+@media print {
+    * {
+        border: 0px;
+        margin: 0px;
+        padding: 0px;
+    }
+    html, body {
+        width: 100%;
+        height: 100%;
+    }
+    #contenido {
+        margin: auto;
+        width: 700px;
+        /*#e7e6e6*/
+    }
+    #encabezadoFactura {
+        width: 100%;
+        height: 100px;
+        border-bottom: 2px black solid;
+        display: flex;
+        flex-direction: row;
+    }
+    #encabezadoFactura #imagen {
+        display: block;
+        width: 200px;
+        height: 100%;
+    }
+    #encabezadoFactura #imagen img {
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+    #encabezadoFactura #titleencabezadoFactura {
+        border: 0px;
+        border-left: 2px black solid;
+        border-right: 2px black solid;
+        width: 100%;
+        font-family: 'Times New Roman', Times, serif;
+        font-weight: bold;
+        text-align: center;
+    }
+    #encabezadoFactura #titleencabezadoFactura #tituloEncabesado {
+        font-size: 16px;
+    }
+    #encabezadoFactura #titleencabezadoFactura #textoTitle {
+        font-size: 12px;
+        color: rgb(66, 65, 65);
+    }
+    #encabezadoFactura #titleencabezadoFactura #acuerdo {
+        font-size: 12px;
+    }
+    #encabezadoFactura #titleencabezadoFactura #direccionTitle, #encabezadoFactura #titleencabezadoFactura #direccionTitlecity {
+        font-size: 12px;
+    }
+    #numFactura {
+        width: 60%;
+        height: 100%;
+    }
+    #numFactura #numeralFactura {
+        border-bottom: 2px black solid;
+    }
+    #numFactura #numeralFactura div {
+        padding: 0px !important;
+        margin: 0px !important;
+    }
+    #numFactura #numeralFactura div label {
+        width: 100%;
+        text-align: center;
+        font-size: 15px;
+        font-weight: bold;
+        font-family: 'Times New Roman', Times, serif;
+        padding: 0px !important;
+        margin: 0px !important;
+        border: 0px;
+    }
+    #numFactura #numeralFactura div input {
+        text-align: center;
+        font-size: 15px;
+        font-weight: bold;
+        font-family: 'Times New Roman', Times, serif;
+        color: red;
+        padding: 0px !important;
+        margin: 0px !important;
+        border: 0px;
+    }
+    #numFactura #numeralRuc {
+        width: 100%;
+    }
+    #numFactura #numeralRuc .row {
+        width: 100%;
+        height: 100%;
+        margin: 0px;
+    }
+    #numFactura #numeralRuc .row label {
+        padding: 0px;
+        margin: 0px;
+        width: 100%;
+        text-align: center;
+        font-family: 'Times New Roman', Times, serif;
+        font-size: 15px;
+        font-weight: bold;
+    }
+    #numFactura #numeralRuc .col-sm-9 {
+        width: 100%;
+        margin: 0px;
+        padding: 0px;
+    }
+    #numFactura #numeralRuc .col-sm-9 input {
+        padding: 0px;
+        margin: 0px;
+        width: 100%;
+        text-align: center;
+        font-family: 'Times New Roman', Times, serif;
+        font-size: 15px;
+        font-weight: bold;
+    }
+    #detallesCliente {
+        width: 100%;
+        border-bottom: 2px black solid;
+    }
+    #detalleCliente {
+        width: 100%;
+        margin: 0px;
+        padding: 0px;
+        padding-left: 10px;
+    }
+    #detalleCliente .col-md-6 {
+        width: 50%;
+        margin: 0px;
+        padding: 0px;
+    }
+    #detalleCliente .col-md-6 .row {
+        width: 100%;
+        margin: 0px;
+        padding: 0px;
+    }
+    #detalleCliente .col-md-6 .row label {
+        width: 130px;
+        padding: 0px;
+        margin: 0px;
+        font-size: 15px;
+        font-family: 'Times New Roman', Times, serif;
+        font-weight: bold;
+    }
+    #detalleCliente .col-md-6 .row div {
+        padding: 0px;
+        width: 208px;
+    }
+    #detalleCliente .col-md-6 .row div input {
+        padding: 0px;
+        width: 100%;
+        margin: 0px;
+        font-size: 12px;
+        font-family: 'Times New Roman', Times, serif;
+        font-weight: bold;
+    }
+    #detalleCliente #fechaConsumo {
+        padding: 0px;
+        margin: 0px;
+    }
+    #detalleCliente #fechaConsumo div {
+        margin: 0px;
+        padding: 0px;
+    }
+    #detalleCliente #fechaConsumo div label, #detalleCliente #fechaConsumo div input {
+        width: 100%;
+        padding: 0px;
+        margin: 0px;
+        text-align: center;
+        font-size: 15px;
+        font-family: 'Times New Roman', Times, serif;
+        font-weight: bold;
+    }
+    #detallePago #titledetallePago {
+        border-bottom: 2px black solid;
+        text-align: center;
+        width: 100%;
+        font-size: 16px;
+        font-family: 'Times New Roman', Times, serif;
+        font-weight: bold;
+    }
+    #detallePago #curpodetallePago {
+        width: 100%;
+        margin: 0px;
+        padding: 20px 20px 0px 20px;
+    }
+    #detallePago #curpodetallePago .row {
+        margin: 0px;
+        padding: 0px
+    }
+    #detallePago #curpodetallePago .row label, #detallePago #curpodetallePago .row div {
+        width: 50%;
+        font-size: 15px;
+        font-family: 'Times New Roman', Times, serif;
+        font-weight: bold;
+        padding: 0px;
+        margin: 0px;
+    }
+    #detallePago #curpodetallePago .row div input {
+        margin: 0px;
+        padding: 0px;
+        font-family: 'Times New Roman', Times, serif;
+        font-weight: bold;
+        font-size: 15px;
+        text-align: end;
+    }
+    #firmas {
+        margin: 0px;
+        padding: 0px;
+        width: 100%;
+        margin-top: 50px;
+        padding-bottom: 20px;
+    }
+    #firmas .col {
+        padding: 0px;
+        margin: 0px;
+    }
+    #firmas .col input {
+        width: 200px;
+        margin: auto;
+        border-radius: 0px;
+        border: none;
+        border-top: 2px black solid;
+        padding: 0px;
+        background-color: transparent;
+    }
+}
