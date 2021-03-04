@@ -232,3 +232,4 @@ where fk_comuna=fk_comun and fk_estado_pagos=1;
 /*corregir problema de update cuando no tiene usuario ni contraseña, no se guarda*/
 /*agregar mensaje que avise si se configuro un limite de dias*/
 select * from cobro_agua;
+/*hola como estas*/
