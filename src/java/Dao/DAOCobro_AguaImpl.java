@@ -3,6 +3,7 @@ package Dao;
 import Modelo.Cobro_Agua;
 import Modelo.Comunero;
 import Modelo.Consumo;
+import Modelo.EstadoPagos;
 import Modelo.Medidor;
 import Modelo.Multas;
 import Modelo.TipoConsumo;
@@ -10,6 +11,8 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DAOCobro_AguaImpl {
 
@@ -21,6 +24,7 @@ public class DAOCobro_AguaImpl {
     Medidor medidor;
     Comunero comunero;
     boolean registroCobroagua = true;
+    EstadoPagos estadoPagos;
 
     /*metodo para listar los datos del consumo sin pagar por el numero de medidor*/
     public Cobro_Agua buscarDatosConsumoImpaga(int fkconsumo, int fk_comun) throws SQLException {
@@ -73,7 +77,7 @@ public class DAOCobro_AguaImpl {
         return cobro_Agua;
     }
 
-    public boolean registrar(int dias_retras, double valor_totalmulta, double total_pagado, int fk_consum, int fk_comun, double deposito,double cambio) throws SQLException {
+    public boolean registrar(int dias_retras, double valor_totalmulta, double total_pagado, int fk_consum, int fk_comun, double deposito, double cambio) throws SQLException {
         CallableStatement ps = null; //para usar esra se agrego la libreria
         try {
             conec = Conexion.getInstace().getConnection();
@@ -166,5 +170,65 @@ public class DAOCobro_AguaImpl {
             Conexion.getInstace().closeConnection(conec);
         }
         return cobro_Agua;
+    }
+
+    /*metodo para consultar los datos para que el usuario pueda acceder a sus consumos de forma predeterminada*/
+    public List<Cobro_Agua> ListarConsumosAbonados(int fk_medidor) throws SQLException {
+        CallableStatement ps = null;
+        List<Cobro_Agua> lista = new ArrayList();
+        try {
+            //almacenamos la conexion en una variable de tipo coneccion
+            conec = Conexion.getInstace().getConnection();
+            /*creamos una variable de tipo result set*/
+            ResultSet res;
+            /*preparamos el procedimiento almacenado*/
+            ps = conec.prepareCall("{call ListarConsumosAbonados(?)}");
+            /*seteamos al procedimiento almacenado el valor que vamos a enviar a la BD*/
+            ps.setInt(1, fk_medidor);
+            /*ejecutamos el procedimiento almacenado*/
+            res = ps.executeQuery();
+            while (res.next()) {
+
+                medidor = new Medidor();
+                comunero = new Comunero();
+                consumo = new Consumo();
+                tipoConsumo = new TipoConsumo();
+                cobro_Agua = new Cobro_Agua();
+                estadoPagos=new EstadoPagos();
+                
+                cobro_Agua.setPk_cobro_agua(res.getInt("pk_cobro_agua"));
+                medidor.setNumero_medidor(res.getString("numero_medidor"));
+                comunero.setPrimer_apellido(res.getString("primer_apellido"));
+                comunero.setSegundo_apellido(res.getString("segundo_apellido"));
+                comunero.setPrimer_nombre(res.getString("primer_nombre"));
+                comunero.setSegundo_nombre(res.getString("segundo_nombre"));
+                consumo.setFecha_lectura(res.getString("fecha_lectura"));
+                consumo.setFecha_limite_pago(res.getString("fecha_limite_pago"));
+                consumo.setConsumo_mcubico(res.getInt("consumo_mcubico"));
+                consumo.setTotal_pagar(res.getDouble("total_pagar"));
+                tipoConsumo.setTipo_consumo(res.getString("tipo_consumo"));
+                cobro_Agua.setTarifa_ambienteC(res.getDouble("tarifa_ambienteC"));
+                cobro_Agua.setAlcantarilladoC(res.getDouble("alcantarilladoC"));
+                cobro_Agua.setValor_multa(res.getDouble("valor_multa"));
+                estadoPagos.setEstado(res.getString("estado"));
+                cobro_Agua.setEstadopagos(estadoPagos);
+
+                consumo.setTipoconsumo(tipoConsumo);
+                medidor.setComunero(comunero);//seteamos el comunero a el medidor
+                consumo.setMedidor(medidor);
+                cobro_Agua.setConsumo(consumo);
+                lista.add(cobro_Agua);
+            }
+            ps.close();
+            Conexion.getInstace().closeConnection(conec);
+
+        } catch (Exception e) {
+            //solo un mensaje en consola
+            System.out.println("No se a podido realizar la consulta " + e.getMessage());
+            ps.close();
+            Conexion.getInstace().closeConnection(conec);
+        }
+
+        return lista;
     }
 }

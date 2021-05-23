@@ -8,9 +8,4 @@
         <servlet-name>Controles</servlet-name>
         <url-pattern>/Controles</url-pattern>
     </servlet-mapping>
-    <session-config>
-        <session-timeout>
-            5
-        </session-timeout>
-    </session-config>
 </web-app>

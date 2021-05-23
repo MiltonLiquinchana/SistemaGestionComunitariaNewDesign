@@ -129,6 +129,7 @@ fecha_cacelacion,
 dias_retraso,
 fk_multas,
 valor_multa,
+total_multa,
 tarifa_basicaC,
 tarifa_ambienteC,
 alcantarilladoC,
@@ -136,7 +137,8 @@ totalpagar,
 deposito,
 cambio,
 fk_estado_pagos) 
-values((select max(pk_consumo) as pk_consumo from consumo where fk_medidor=fk_medido),fecha_limit,0,1,0,
+values((select max(pk_consumo) as pk_consumo from consumo where fk_medidor=fk_medido),fecha_limit,0,1,
+(select valor from multas where fk_comuna=1 and tipo_multa="Retraso"),0,
 (select tarifa_basica from tipoconsumo where pk_tipoconsumo=fk_tipoconsum),
 (select tarifa_ambiente from tipoconsumo where pk_tipoconsumo=fk_tipoconsum),
 (select alcantarillado from tipoconsumo where pk_tipoconsumo=fk_tipoconsum),
@@ -163,9 +165,7 @@ begin
 select consumo_mcubico,tipo_consumo,fecha_lectura, fecha_limite_pago,total_pagar as subtotal,
 (if(curdate()>fecha_limite_pago,"Retraso","Sin Recargo"))as tipo_multa,
 (
-if(curdate()>fecha_limite_pago,(select valor from multas 
- where tipo_multa="Retraso"
-and fk_comuna=fk_comun),"0")
+if(curdate()>fecha_limite_pago,(select valor_multa from cobro_agua where fk_consumo=fk_consum),"0")
 )as valor_multa,tarifa_ambiente,alcantarillado from consumo
 join tipoconsumo
 on pk_tipoconsumo=fk_tipoconsumo
@@ -185,7 +185,7 @@ cambi double)
 update cobro_agua set fecha_cacelacion=curdate(),dias_retraso=dias_retras,
 fk_multas=(select if(curdate()>(select fecha_limite_pago from consumo where pk_consumo=fk_consum),
 (select pk_multas from multas where tipo_multa="Retraso" and fk_comuna=fk_comun),1)),
-valor_multa=valor_totalmulta,
+total_multa=valor_totalmulta,
 totalpagar=total_pagado,
 deposito=deposit,
 cambio=cambi,
@@ -229,7 +229,57 @@ join comunero
 on pk_comunero=fk_comunero
 where fk_comuna=fk_comun and fk_estado_pagos=1;
 
+/*procedimiento almacenado para buscar los medidores por el numero de cedula o el nombre*/
+create procedure listarAbonados(dato varchar(300))
+select cedula,primer_nombre,segundo_nombre,primer_apellido,segundo_apellido,pk_medidor,numero_medidor
+ from comunero
+ join medidor
+ on fk_comunero=pk_comunero
+ where (cedula=dato or CONCAT(primer_apellido," ",segundo_apellido," ",primer_nombre," ",segundo_nombre) = dato) and fk_estadoComunero=1;
+
+
 /*corregir problema de update cuando no tiene usuario ni contraseña, no se guarda*/
 /*agregar mensaje que avise si se configuro un limite de dias*/
-select * from cobro_agua;
-/*hola como estas*/
+select * from comumero;
+
+/*procedimiento almacenado para listar los consumo para la consulta de la pagina inicio*/
+Delimiter $$
+create procedure ListarConsumosAbonados(fk_medid int)
+begin
+if((select count(*) from consumo join cobro_agua
+on pk_consumo=fk_consumo 
+join medidor
+on pk_medidor=consumo.fk_medidor
+where fk_estado_pagos=2 and fk_medidor=fk_medid)>0) 
+then 
+select pk_cobro_agua, numero_medidor,primer_nombre,segundo_nombre,primer_apellido,segundo_apellido,consumo_mcubico,fecha_lectura,fecha_limite_pago,tipo_consumo,tarifa_ambienteC,alcantarilladoC,consumo.total_pagar,valor_multa,estado from medidor
+join comunero
+on pk_comunero=fk_comunero
+join consumo
+on pk_medidor=fk_medidor 
+join cobro_agua
+on pk_consumo=fk_consumo
+join tipoconsumo
+on tipoconsumo.pk_tipoconsumo=consumo.fk_tipoconsumo
+join estado_pagos
+on pk_estado_pagos =cobro_agua.fk_estado_pagos
+where fk_estado_pagos=2 and fk_medidor=fk_medid order by pk_cobro_agua;
+ else
+select pk_cobro_agua, numero_medidor,primer_nombre,segundo_nombre,primer_apellido,segundo_apellido,consumo_mcubico,fecha_lectura,fecha_limite_pago,tipo_consumo,tarifa_ambienteC,alcantarilladoC,consumo.total_pagar,valor_multa,estado from medidor
+join comunero
+on pk_comunero=fk_comunero
+join consumo
+on pk_medidor=fk_medidor 
+join cobro_agua
+on pk_consumo=fk_consumo
+join tipoconsumo
+on tipoconsumo.pk_tipoconsumo=consumo.fk_tipoconsumo
+join estado_pagos
+on pk_estado_pagos =cobro_agua.fk_estado_pagos
+where fk_consumo=(select max(pk_consumo) from consumo join cobro_agua on pk_consumo=fk_consumo where fk_medidor=fk_medid and fk_estado_pagos=1);
+end if;
+end$$
+Delimiter $$
+
+call ListarConsumosAbonados(1)
+/**hola perro jajajjajajja*/

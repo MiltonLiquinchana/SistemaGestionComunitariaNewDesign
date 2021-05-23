@@ -10,6 +10,7 @@ public class Cobro_Agua {
     private int dias_retraso;
     private Multas multas;
     private Double valor_multa;
+    private Double total_multa;
     private Double totalpagar;
     private Double tarifa_basicaC;
     private Double tarifa_ambienteC;
@@ -21,7 +22,7 @@ public class Cobro_Agua {
     public Cobro_Agua() {
     }
 
-    public Cobro_Agua(int pk_cobro_agua, Consumo consumo, Date fecha_cacelacion, int dias_retraso, Multas multas, Double valor_multa, Double totalpagar, Double tarifa_basicaC, Double tarifa_ambienteC, Double alcantarilladoC, Double deposito, Double cambio, EstadoPagos estadopagos) {
+    public Cobro_Agua(int pk_cobro_agua, Consumo consumo, Date fecha_cacelacion, int dias_retraso, Multas multas, Double valor_multa,Double total_multa, Double totalpagar, Double tarifa_basicaC, Double tarifa_ambienteC, Double alcantarilladoC, Double deposito, Double cambio, EstadoPagos estadopagos) {
         this.pk_cobro_agua = pk_cobro_agua;
         this.consumo = consumo;
         this.fecha_cacelacion = fecha_cacelacion;
@@ -35,6 +36,7 @@ public class Cobro_Agua {
         this.deposito = deposito;
         this.cambio = cambio;
         this.estadopagos = estadopagos;
+        this.total_multa=total_multa;
     }
 
     public int getPk_cobro_agua() {
@@ -83,6 +85,14 @@ public class Cobro_Agua {
 
     public void setValor_multa(Double valor_multa) {
         this.valor_multa = valor_multa;
+    }
+
+    public Double getTotal_multa() {
+        return total_multa;
+    }
+
+    public void setTotal_multa(Double total_multa) {
+        this.total_multa = total_multa;
     }
 
     public Double getTotalpagar() {
@@ -141,4 +151,5 @@ public class Cobro_Agua {
         this.estadopagos = estadopagos;
     }
 
+   
 }

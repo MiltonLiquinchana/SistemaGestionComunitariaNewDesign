@@ -144,6 +144,7 @@ dias_retraso int not null,/*Se calcula al verificar la fecha cancelacion con fec
 (si fecha de cancelacion es superior a tantos dias comenar a calcular los dias de retraso)*/
 fk_multas int not null,
 valor_multa decimal(8,2) not null,
+total_multa decimal(8,2) not null,
 tarifa_basicaC decimal(8,2) not null,
 tarifa_ambienteC decimal(8,2) not null,
 alcantarilladoC decimal(8,2) not null,
@@ -277,6 +278,12 @@ pk_LimiteDias int primary key auto_increment not null,
 LimiteDias int not null,
 fk_comuna int not null,
 foreign key(fk_comuna) references comuna(pk_comuna)
-)
+);
 
-/*hola perro*/
+/*tabla que sirve para guardar las url de las imagenes que se utilizaran en el slider para mostrarselas a cada comuna*/
+create table slider(
+pk_slider int primary key auto_increment not null,
+url
+);
+
+/*hola perro jajjaj*/

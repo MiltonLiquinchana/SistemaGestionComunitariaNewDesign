@@ -18,9 +18,14 @@ import Modelo.Login;
 import Modelo.Medidor;
 import Modelo.TipoConsumo;
 import Modelo.Tipousuario;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -28,8 +33,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.swing.JOptionPane;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 @MultipartConfig//ponemos esto para que nos permita obtener datos mediante formdata
@@ -168,9 +173,20 @@ public class Controles extends HttpServlet {
             case "buscarDatosFactura":
                 buscarDatosFactura(request, response);
                 break;
+            case "listarAbonados":
+                listarAbonados(request, response);
+                break;
+            case "ListarConsumosAbonados":
+                ListarConsumosAbonados(request, response);
+                break;
+            case "crearJson":
+                crearJson(request, response);
+                break;
+            case "leerJSON":
+                leerJSON(request, response);
+                break;
         }
     }
-    
 
     @Override
     public String getServletInfo() {
@@ -200,7 +216,7 @@ public class Controles extends HttpServlet {
                 //agregamos propiedades al json
                 json.put("pk_login", log.getPk_login());
                 json.put("usuario", log.getUsuario());
-                json.put("contraseña", log.getContrasenia());
+                json.put("contrasenia", log.getContrasenia());
                 json.put("pk_tipousuario", log.getTipoUsuario().getPk_tipousuario());
                 json.put("tipo_usuario", log.getTipoUsuario().getTipo_usuario());
                 json.put("pk_comunero", log.getComunero().getPk_comunero());
@@ -232,7 +248,7 @@ public class Controles extends HttpServlet {
             List<Comunero> lista = null;//primero vaciamos la lista
             /*creamos un bojeto de secion para obtener el id de la comuna*/
             HttpSession session = request.getSession();
-            lista = dAOComuneroImpl.listar(2/*Integer.parseInt(String.valueOf(session.getAttribute("pk_comunidad")))*/);//llenamos la lista con los parametros recividos
+            lista = dAOComuneroImpl.listar(Integer.parseInt(String.valueOf(session.getAttribute("pk_comunidad"))));//llenamos la lista con los parametros recividos
 
             //creamos una istancia del objeto jsonArray, aqui le ponemos con el proposito de que se aga iterable para verificar en el js 
             arrjson = new JSONArray();
@@ -367,7 +383,7 @@ public class Controles extends HttpServlet {
             Contrasenia = request.getParameter("contrasenia");
             edad = Integer.parseInt(request.getParameter("edad"));
             HttpSession session = request.getSession();
-            fk_comuna = 2/*Integer.parseInt(String.valueOf(session.getAttribute("pk_comunidad")))*/;//esto se obtiene desde la session
+            fk_comuna = Integer.parseInt(String.valueOf(session.getAttribute("pk_comunidad")));//esto se obtiene desde la session
             fk_tipousuario = Integer.parseInt(request.getParameter("tipoUsuario"));
             respuesta = dAOComuneroImpl.registrarEditarEliminar(accion, 1, cedula, primer_nombre, segundo_nombre, primer_apellido, segundo_Apellido, telefono, fecha_nacimiento, edad, fk_comuna, direccion_vivienda, referencia_geografica, usuario, Contrasenia, fk_tipousuario);
             //System.out.println(respuesta);
@@ -407,7 +423,7 @@ public class Controles extends HttpServlet {
             Contrasenia = request.getParameter("contrasenia");
             edad = Integer.parseInt(request.getParameter("edad"));
             HttpSession session = request.getSession();
-            fk_comuna = 2/*Integer.parseInt(String.valueOf(session.getAttribute("pk_comunidad")))*/;//esto se obtiene desde la session
+            fk_comuna = Integer.parseInt(String.valueOf(session.getAttribute("pk_comunidad")));//esto se obtiene desde la session
             fk_tipousuario = Integer.parseInt(request.getParameter("tipoUsuario"));
             respuesta = dAOComuneroImpl.registrarEditarEliminar(accion, pk_comuner, cedula, primer_nombre, segundo_nombre, primer_apellido, segundo_Apellido, telefono, fecha_nacimiento, edad, fk_comuna, direccion_vivienda, referencia_geografica, usuario, Contrasenia, fk_tipousuario);
             System.out.println(respuesta);
@@ -462,7 +478,7 @@ public class Controles extends HttpServlet {
             out = response.getWriter();
             String dato = request.getParameter("dato");
             HttpSession session = request.getSession();
-            int fk_comun = Integer.parseInt("2"/*String.valueOf(session.getAttribute("pk_comunidad"))*/);
+            int fk_comun = Integer.parseInt(String.valueOf(session.getAttribute("pk_comunidad")));
             dAOComuneroImpl = new DAOComuneroImpl();
             comunero = new Comunero();
             comunero = dAOComuneroImpl.consultaComuneroCedula(dato, fk_comun);
@@ -540,7 +556,7 @@ public class Controles extends HttpServlet {
             tipoconsumo = new TipoConsumo();
             dAOTipoConsumoImpl = new DAOTipoConsumoImpl();
             HttpSession session = request.getSession();
-            tipoconsumo = dAOTipoConsumoImpl.listarTipoConsumo(2/*Integer.parseInt(String.valueOf(session.getAttribute("pk_comunidad")))*/, valor);
+            tipoconsumo = dAOTipoConsumoImpl.listarTipoConsumo(Integer.parseInt(String.valueOf(session.getAttribute("pk_comunidad"))), valor);
             json = new JSONObject();
             if (tipoconsumo == null) {
                 json.put("error", "error");
@@ -580,7 +596,7 @@ public class Controles extends HttpServlet {
             limiteDias = new LimiteDias();
             dAOLimiteDias = new DAOLimiteDias();
             HttpSession session = request.getSession();
-            limiteDias = dAOLimiteDias.buscarLimiteDias(2/*Integer.parseInt(String.valueOf(session.getAttribute("pk_comunidad")))*/);
+            limiteDias = dAOLimiteDias.buscarLimiteDias(Integer.parseInt(String.valueOf(session.getAttribute("pk_comunidad"))));
             json = new JSONObject();
             if (limiteDias == null) {
                 json.put("error", "error");
@@ -611,7 +627,7 @@ public class Controles extends HttpServlet {
             fk_medido = Integer.parseInt(request.getParameter("numMedidor"));
             fk_tipoconsumo = Integer.parseInt(request.getParameter("tipoConsumo"));
             HttpSession session = request.getSession();
-            fk_comun = 2/*Integer.parseInt(String.valueOf(session.getAttribute("pk_comunidad")))*/;
+            fk_comun = Integer.parseInt(String.valueOf(session.getAttribute("pk_comunidad")));
             fecha_lectu = request.getParameter("fechaRegistro");
             fecha_limit = request.getParameter("fechaLimite");
             total_pag = Double.parseDouble(request.getParameter("totalPagar"));
@@ -669,7 +685,7 @@ public class Controles extends HttpServlet {
             out = response.getWriter();
             int fkconsumo = Integer.parseInt(request.getParameter("fkconsumo"));
             HttpSession session = request.getSession();
-            int fk_comun = 2;/*Integer.parseInt(String.valueOf(session.getAttribute("pk_comunidad")));esta variable no deberia ser necesaria hay que eliminarlar tanto en el procedimiento almacenado 
+            int fk_comun = Integer.parseInt(String.valueOf(session.getAttribute("pk_comunidad")));/*esta variable no deberia ser necesaria hay que eliminarlar tanto en el procedimiento almacenado 
             como en este metodo*/
             cobro_agua = new Cobro_Agua();
             dAOCobro_AguaImpl = new DAOCobro_AguaImpl();
@@ -704,7 +720,8 @@ public class Controles extends HttpServlet {
             int dias_retras = Integer.parseInt(request.getParameter("diasRetraso"));
             int fk_consum = Integer.parseInt(request.getParameter("consumo"));
             HttpSession session = request.getSession();
-            int fk_comun = 2;/*Integer.parseInt(String.valueOf(session.getAttribute("pk_comunidad"))); hay que eliminar este parametro */
+            int fk_comun = Integer.parseInt(String.valueOf(session.getAttribute("pk_comunidad")));
+            /*hay que eliminar este parametro */
             double valor_totalmulta = Double.parseDouble(request.getParameter("totalMulta"));
             double total_pagado = Double.parseDouble(request.getParameter("totalPagar"));
             double deposito = Double.parseDouble(request.getParameter("deposito"));
@@ -732,7 +749,7 @@ public class Controles extends HttpServlet {
             out = response.getWriter();
             int fk_consumo = Integer.parseInt(request.getParameter("pk_consumo"));
             HttpSession session = request.getSession();
-            int fk_comun = 2;/*Integer.parseInt(String.valueOf(session.getAttribute("pk_comunidad")));eliminar no es necesario para la consulta*/
+            int fk_comun = Integer.parseInt(String.valueOf(session.getAttribute("pk_comunidad")));/*eliminar no es necesario para la consulta*/
             cobro_agua = new Cobro_Agua();
             dAOCobro_AguaImpl = new DAOCobro_AguaImpl();
             cobro_agua = dAOCobro_AguaImpl.buscarDatosFactura(fk_consumo);
@@ -777,6 +794,259 @@ public class Controles extends HttpServlet {
         } catch (SQLException e) {
             System.out.println("Error no se a podido obtener los datos " + e.getMessage());
             out.close();
+        }
+    }
+
+    private void listarAbonados(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            //creamoun objeto con el cual vamos a imprimir el resultado a json
+            out = response.getWriter();
+            String dato = request.getParameter("dato");
+
+            List<Medidor> lista = null;
+            dAOMedidorImpl = new DAOMedidorImpl();
+            //obtenemos el listado de los numeros de medidor
+            lista = dAOMedidorImpl.listarAbonados(dato);
+            arrjson = new JSONArray();
+            json = new JSONObject();
+            if (lista.size() <= 0) {
+                json.put("error", "error");
+                //arrjson.put(json);
+                out.print(json);
+            }
+            if (lista.size() >= 1) {
+                for (Medidor abonado : lista) {
+                    json = new JSONObject();
+                    //agregamos propiedades al json
+                    json.put("cedula", abonado.getComunero().getCedula());
+                    json.put("primer_nombre", abonado.getComunero().getPrimer_nombre());
+                    json.put("segundo_nombre", abonado.getComunero().getSegundo_nombre());
+                    json.put("primer_apellido", abonado.getComunero().getPrimer_apellido());
+                    json.put("segundo_apellido", abonado.getComunero().getSegundo_apellido());
+                    json.put("pk_medidor", abonado.getPk_medidor());
+                    json.put("numero_medidor", abonado.getNumero_medidor());
+                    arrjson.put(json);
+                }
+                out.print(arrjson);
+
+            }
+            out.close();
+            json = null;
+            arrjson = null;
+        } catch (SQLException e) {
+            System.out.println("Error no se a podido obtener los datos " + e.getMessage());
+            out.close();
+        }
+    }
+
+    private void ListarConsumosAbonados(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            //creamos un objeto con el cual vamos a imprimir el resultado
+            out = response.getWriter();
+            //recuperamos el parametro el cual se va a enviar a la base de datos para la consulta
+            int fk_medido = Integer.parseInt(request.getParameter("fk_medido"));//parseamos el valor obtenido
+
+            //creamos un objeto para acceder al metodo que ejecuta el procedimiento almacenado
+            dAOCobro_AguaImpl = new DAOCobro_AguaImpl();
+            /*creamos una lista en la cual se alacenaran los datos que reciviremos al ejecutar el metodo del procedimiento*/
+            List<Cobro_Agua> lista = null;
+            lista = dAOCobro_AguaImpl.ListarConsumosAbonados(fk_medido);
+            //creamos un objeto de tipo json y otro de tipo arrayjson
+            json = new JSONObject();
+            arrjson = new JSONArray();
+            //comprobamos que la lista no este vacia
+            if (lista.size() <= 0) {/*si la lista esta vacia debolvemos un mensaje de error e imprimimos*/
+                json.put("error", "error");
+                //imprimimos el objeto
+                out.print(json);
+            } else {/*en caso de que la lista si contenga datos*/
+ /*con un ciclo for recorremos la lista*/
+                for (Cobro_Agua cobro_abonado : lista) {
+                    //por cada fila que recorra se crea un nuevo objeto json
+                    json = new JSONObject();
+                    /*en este objeto json se setean los datos objetnidos para enviarlas al front*/
+                    json.put("pk_cobro_agua", cobro_abonado.getPk_cobro_agua());
+                    json.put("numero_medidor", cobro_abonado.getConsumo().getMedidor().getNumero_medidor());
+                    json.put("primer_apellido", cobro_abonado.getConsumo().getMedidor().getComunero().getPrimer_apellido());
+                    json.put("segundo_apellido", cobro_abonado.getConsumo().getMedidor().getComunero().getSegundo_apellido());
+                    json.put("primer_nombre", cobro_abonado.getConsumo().getMedidor().getComunero().getPrimer_nombre());
+                    json.put("segundo_nombre", cobro_abonado.getConsumo().getMedidor().getComunero().getSegundo_nombre());
+                    json.put("fecha_lectura", cobro_abonado.getConsumo().getFecha_lectura());
+                    json.put("fecha_limite_pago", cobro_abonado.getConsumo().getFecha_limite_pago());
+                    json.put("consumo_mcubico", cobro_abonado.getConsumo().getConsumo_mcubico());
+                    json.put("subtotal_pagar", cobro_abonado.getConsumo().getTotal_pagar());
+                    json.put("tipo_consumo", cobro_abonado.getConsumo().getTipoconsumo().getTipo_consumo());
+                    json.put("tarifa_ambienteC", cobro_abonado.getTarifa_ambienteC());
+                    json.put("alcantarilladoC", cobro_abonado.getAlcantarilladoC());
+                    json.put("valor_multa", cobro_abonado.getValor_multa());
+                    json.put("estado", cobro_abonado.getEstadopagos().getEstado());
+                    //por cada recorido se van a ir almacenando los objetos json en el objeto array json
+                    arrjson.put(json);
+                }
+                //imprimimos el objeto arrayjson
+                out.print(arrjson);
+            }
+            out.close();//cerramos el objeto de imprecion
+            /*limpiamos los objetos json*/
+            json = null;
+            arrjson = null;
+        } catch (SQLException e) {
+            System.out.println("Error no se a podido obtener los datos " + e.getMessage());
+            out.close();
+        }
+    }
+
+    private void crearJson(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            String arr = request.getParameter("urls");
+            String arrt = request.getParameter("titles");
+            String arrd = request.getParameter("descriptions");
+            String comuna = request.getParameter("comunidad");
+            String navcolor = request.getParameter("navColor");
+            out = response.getWriter();
+            json = new JSONObject();//slider
+
+            JSONObject json2 = new JSONObject();//comuna
+            JSONObject json3 = new JSONObject();//colores
+            JSONObject json4 = new JSONObject();//itemscolores
+
+            String link = "";
+            String title = "";
+            String description = "";
+            String coma = ",";
+            String letra;
+            /*validamos el arreglo de urls*/
+            ArrayList<String> arrlist = new ArrayList<>();/*creamos una arraylist par almacenar los links*/
+            for (int i = 0; i < arr.length(); i++) {/*con un ciclo for validamos cada letra del arreglo por que no esta enviando en cadena*/
+                letra = String.valueOf(arr.charAt(i));/*sacamos la letra de la cadenda en la posicion que recorremos*/
+                if (letra.equals(coma)) {/*preguntamos si el caracter es una coma*/
+                    arrlist.add(link.replace(",", ""));/*en caso de que si sea agregamos lo que tenemos al array list de tipo json*/
+                    link = "";/*limpiamos el almacenador de caracteres que no sirve para ir formando la cadena letra por letra*/
+                }
+                if ((arr.length() - 1) == i) {/*con este if validamos si es que nos encontramos en la ultima posicion de la cadena  menos 1 por que la cadena empezamos a contrar desde */
+                    arrlist.add((link + arr.charAt(i)).replace(",", ""));/*le decimos que si es la cadena menos uno por que contamos desde 0 es igual a lo que recorrio el ciclo for entonces agregamos lo que tiene link+ el ultimo caracter
+                    por que si solo ponemos que nos agrege los caracteres obtenidos no va a ignorar la ultima letra por cuestion de la condicional
+                    aqui reemplazamos la coma por nada por que como el for cige recorriendo en caso de detectar una coma si nos agrega lo que tiene link pero como continua
+                    la coma se agrega para el siguiente item para el arreglo*/
+                    link = "";
+                }
+
+                link += arr.charAt(i);
+            }
+            letra = "";
+            /*validamos el arreglo de titulos*/
+            ArrayList<String> arrlistTitle = new ArrayList<>();
+            for (int i = 0; i < arrt.length(); i++) {
+                letra = String.valueOf(arrt.charAt(i));
+                if (letra.equals(coma)) {
+                    arrlistTitle.add((title.replace(",", "")).replace("#", ","));
+                    title = "";
+                }
+                if ((arrt.length() - 1) == i) {
+                    arrlistTitle.add((title.replace(",", "") + arrt.charAt(i)).replace("#", ","));
+                    title = "";
+                }
+                title += arrt.charAt(i);
+
+            }
+            letra = "";
+
+            /*validadmos el arreglo de descripciones*/
+            ArrayList<String> arrlistDescription = new ArrayList<>();
+            for (int i = 0; i < arrd.length(); i++) {
+                letra = String.valueOf(arrd.charAt(i));
+                if (letra.equals(coma)) {
+                    arrlistDescription.add((description.replace(",", "")).replace("#", ","));
+                    description = "";
+                }
+                if ((arrd.length() - 1) == i) {
+                    arrlistDescription.add((description.replace(",", "") + arrd.charAt(i)).replace("#", ","));
+                    description = "";
+                }
+                description += arrd.charAt(i);
+            }
+            letra = "";
+            arrjson = new JSONArray();
+            JSONObject json5 = null;
+            System.out.println("lista links: " + arrlist.size() + " lista titulos: " + arrlistTitle.size() + " lsita descripciones: " + arrlistDescription.size());
+            for (int i = 0; i < arrlist.size(); i++) {
+                json5=new JSONObject();
+                json5.put("Title", arrlistTitle.get(i));
+                json5.put("Description", arrlistDescription.get(i));
+                json5.put("Link", arrlist.get(i));
+                arrjson.put(json5);
+            }
+            /*el objeto json4 o colore tien sus  propias propiedaes*/
+            json4.put("nav", navcolor);
+            json3.put("colores", json4);
+            json.put("sliderLinks", arrjson);
+            json.put("menu", json3);
+            json2.put(comuna, json);
+
+            File file = new File("/home/MiltonLQ/Descargas/test.json");//comprobamos si el archivo existe o no
+            if (file.exists()) {/*en caso de que si exista*/
+
+                String fichero = "";//creamos una variable la cual almacenara cada linea que contenga el json
+                BufferedReader bf = new BufferedReader(new FileReader("/home/MiltonLQ/Descargas/test.json"));/*leemos el archivo json*/
+                String linea;/*creamos una variable la cual almacenara la linea solo cuando se esta recorriendo*/
+                while ((linea = bf.readLine()) != null) {/*con el while recorremos el archivo linea por linea*/
+                    fichero += linea;/*cada linea encontrada la vamos acumulando en el string fichero*/
+
+                }
+                JSONObject jsonFile = new JSONObject(fichero);/*convertimos el string a json*/
+                jsonFile.put(comuna, json);/*agregamos el nuevo valor*/
+                FileWriter filew = new FileWriter("/home/MiltonLQ/Descargas/test.json");/*creamos el fichero*/
+                filew.write(jsonFile.toString());/*escribimos el texto json*/
+                filew.flush();/*guardamos*/
+                filew.close();/*creamos*/
+                out.print(jsonFile);
+
+            } else {/*en caso de que no exista el fichero*/
+                FileWriter filew = new FileWriter("/home/MiltonLQ/Descargas/test.json");/*creamos el fichero*/
+                filew.write(json2.toString());/*escribimos lo que se haya recivido*/
+                filew.flush();/*guardamos y cerramos*/
+                filew.close();
+                out.print(json2);
+            }
+
+            out.close();
+            json = null;
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+    }
+
+    private void leerJSON(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            out = response.getWriter();
+
+            /*comprobamos que el fichero exista*/
+            File filejson = new File("/home/MiltonLQ/Descargas/test.json");
+            if (filejson.exists()) {/*En caso de que si exista*/
+
+                String fichero = "";//creamos una variable la cual almacenara cada linea que contenga el json
+                BufferedReader bf = new BufferedReader(new FileReader("/home/MiltonLQ/Descargas/test.json"));/*leemos el archivo json*/
+                String linea;/*creamos una variable la cual almacenara la linea solo cuando se esta recorriendo*/
+                while ((linea = bf.readLine()) != null) {/*con el while recorremos el archivo linea por linea*/
+                    fichero += linea;/*cada linea encontrada la vamos acumulando en el string fichero*/
+
+                }
+                json = new JSONObject(fichero);/*convertimos el string a json*/
+
+            } else {/*en caso de que no exista*/
+                json = new JSONObject();/*creamos un json y agregamos un mensage*/
+                json.put("message", "No existe el fichero");
+
+            }
+            /*envamos el json a la vista*/
+            out.print(json);
+            out.close();
+            json = null;
+
+        } catch (IOException | JSONException e) {
+            System.out.println(e.getMessage());
         }
     }
 
